@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getSession } from '@/lib/auth';
+import { getCurrentUser } from '@/lib/auth';
+import { canAccessProfile } from '@/lib/permissions';
 import { initDatabase, queryOne, execute } from '@/lib/db';
 
 export async function GET(
@@ -8,30 +9,30 @@ export async function GET(
 ) {
   try {
     const { employeeId } = await params;
-    const session = await getSession();
+    const user = await getCurrentUser();
 
-    if (!session) {
+    if (!user) {
       return NextResponse.json(
         { success: false, error: 'Not authenticated' },
         { status: 401 }
       );
     }
 
-    // Role-based access: Admin can view anyone, employee can view only themselves
-    if (session.role !== 'admin' && session.employeeId !== employeeId && employeeId !== 'me') {
+    const targetId = employeeId === 'me' ? user.employeeId : employeeId;
+
+    if (!canAccessProfile(user, targetId)) {
       return NextResponse.json(
         { success: false, error: 'Forbidden' },
         { status: 403 }
       );
-    }
 
-    const targetEmployeeId = employeeId === 'me' ? session.employeeId : employeeId;
+    }
 
     await initDatabase();
 
     const employee = await queryOne<any>(
       'SELECT * FROM employees WHERE employee_id = ?',
-      [targetEmployeeId]
+      [targetId]
     );
 
     if (!employee) {
@@ -111,13 +112,13 @@ export async function PATCH(
 ) {
   try {
     const { employeeId } = await params;
-    const session = await getSession();
+    const session = await getCurrentUser();
 
     if (!session) {
       return NextResponse.json({ success: false, error: 'Not authenticated' }, { status: 401 });
     }
 
-    const isAdmin = session.role === 'admin';
+    const isAdmin = session.role === 'ADMIN';
     const isSelf = session.employeeId === employeeId || employeeId === 'me';
     
     if (!isAdmin && !isSelf) {

@@ -6,13 +6,17 @@ import Navbar from '@/components/Navbar';
 
 interface EmployeeData {
   id: string;
+  employee_id?: string;
   name: string;
   email: string;
   mobile?: string;
+  phone?: string;
   role: string;
   avatar: string;
   created_at?: string;
   company?: string;
+  companyName?: string;
+  address?: string;
 }
 
 export default function ProfilePage() {
@@ -26,9 +30,14 @@ export default function ProfilePage() {
   const [user, setUser] = useState<any>(null); // To show in navbar
   const [isUploading, setIsUploading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  
+  const [isEditing, setIsEditing] = useState(false);
+  const [editPhone, setEditPhone] = useState('');
+  const [editAddress, setEditAddress] = useState('');
+  const [isSaving, setIsSaving] = useState(false);
 
   const handleImageClick = () => {
-    if (user?.employee_id === employee?.id || ['admin', 'hr'].includes(user?.role?.toLowerCase())) {
+    if (user?.employee_id === employee?.employee_id || user?.employee_id === employee?.id || ['admin', 'hr'].includes(user?.role?.toLowerCase())) {
       fileInputRef.current?.click();
     }
   };
@@ -77,9 +86,9 @@ export default function ProfilePage() {
   }, [id]);
 
   const MOCK_PROFILES: Record<string, EmployeeData> = {
-    '1': { id: 1, employee_id: 'OIADMN20240001', name: 'Priya Sharma', email: 'priya.sharma@dayflow.in', phone: '+91 98765 43210', role: 'admin', avatar: '', created_at: '2024-01-15T09:00:00Z', companyName: 'Odoo' },
-    '2': { id: 2, employee_id: 'OIJODO20240002', name: 'John Doe', email: 'john@dayflow.in', phone: '+91 98765 43211', role: 'employee', avatar: '', created_at: '2024-02-10T09:00:00Z', companyName: 'Odoo' },
-    'me': { id: 1, employee_id: 'OIADMN20240001', name: 'Priya Sharma', email: 'priya.sharma@dayflow.in', phone: '+91 98765 43210', role: 'admin', avatar: '', created_at: '2024-01-15T09:00:00Z', companyName: 'Odoo' },
+    '1': { id: '1', name: 'Priya Sharma', email: 'priya.sharma@dayflow.in', phone: '+91 98765 43210', role: 'admin', avatar: '', created_at: '2024-01-15T09:00:00Z', companyName: 'Odoo' },
+    '2': { id: '2', name: 'John Doe', email: 'john@dayflow.in', phone: '+91 98765 43211', role: 'employee', avatar: '', created_at: '2024-02-10T09:00:00Z', companyName: 'Odoo' },
+    'me': { id: '1', name: 'Priya Sharma', email: 'priya.sharma@dayflow.in', phone: '+91 98765 43210', role: 'admin', avatar: '', created_at: '2024-01-15T09:00:00Z', companyName: 'Odoo' },
   };
 
   const fetchData = async () => {
@@ -93,7 +102,10 @@ export default function ProfilePage() {
       const res = await fetch(`/api/employees/${id}`).catch(() => null);
       if (res && res.ok) {
         const json = await res.json();
-        setEmployee(json.data?.employee || json.employee);
+        const emp = json.data?.employee || json.employee;
+        setEmployee(emp);
+        setEditPhone(emp.phone || '');
+        setEditAddress(emp.address || '');
         return;
       }
       
@@ -104,6 +116,28 @@ export default function ProfilePage() {
       setEmployee(fallback);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleSaveProfile = async () => {
+    setIsSaving(true);
+    try {
+      const res = await fetch(`/api/employees/${id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ phone: editPhone, address: editAddress }),
+      });
+      if (res.ok) {
+        setEmployee(prev => prev ? { ...prev, phone: editPhone, address: editAddress } : prev);
+        setIsEditing(false);
+      } else {
+        alert('Failed to update profile');
+      }
+    } catch (err) {
+      console.error(err);
+      alert('An error occurred while saving');
+    } finally {
+      setIsSaving(false);
     }
   };
 
@@ -155,7 +189,7 @@ export default function ProfilePage() {
                 </span>
               )}
               
-              {(user?.employee_id === employee.id || ['admin', 'hr'].includes(user?.role?.toLowerCase())) && (
+              {(user?.employee_id === employee?.employee_id || user?.employee_id === employee?.id || ['admin', 'hr'].includes(user?.role?.toLowerCase())) && (
                 <div className="absolute inset-0 bg-black/50 hidden group-hover:flex items-center justify-center transition-all">
                   <span className="text-white font-body text-xs font-bold text-center">
                     {isUploading ? 'Uploading...' : 'Change Photo'}
@@ -180,19 +214,63 @@ export default function ProfilePage() {
                 </span>
               </div>
               
-              <h2 className="font-headline text-4xl font-bold text-[var(--uxsg-ink)] tracking-wide">
-                {employee.name}
-              </h2>
-              <p className="font-body text-gray-600 text-sm mt-1 mb-6">HR Manager</p>
+              <div className="flex justify-between items-start">
+                <div>
+                  <h2 className="font-headline text-4xl font-bold text-[var(--uxsg-ink)] tracking-wide">
+                    {employee.name}
+                  </h2>
+                  <p className="font-body text-gray-600 text-sm mt-1 mb-6">HR Manager</p>
+                </div>
+                {(user?.employee_id === employee?.employee_id || user?.employee_id === employee?.id || ['admin', 'hr'].includes(user?.role?.toLowerCase())) && (
+                  <button 
+                    onClick={() => isEditing ? handleSaveProfile() : setIsEditing(true)}
+                    disabled={isSaving}
+                    className="font-body text-xs font-bold bg-white border-2 border-black px-4 py-2 hover:bg-gray-50 transition-colors shadow-[2px_2px_0px_#000]"
+                  >
+                    {isSaving ? 'Saving...' : (isEditing ? 'Save Profile' : 'Edit Profile')}
+                  </button>
+                )}
+              </div>
 
               {/* Grid Details */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-12 gap-y-6">
                 <DetailItem icon="✉️" label="EMAIL" value={employee.email} />
-                <DetailItem icon="📱" label="MOBILE" value={employee.phone || '+91 98765 43210'} />
+                
+                {isEditing ? (
+                  <div>
+                    <p className="font-body text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-1 flex items-center gap-1.5">
+                      <span className="opacity-80">📱</span> MOBILE
+                    </p>
+                    <input 
+                      type="text" 
+                      value={editPhone}
+                      onChange={(e) => setEditPhone(e.target.value)}
+                      className="w-full border-b-2 border-black bg-transparent py-1 font-body text-sm font-semibold text-black focus:outline-none"
+                    />
+                  </div>
+                ) : (
+                  <DetailItem icon="📱" label="MOBILE" value={employee.phone || '+91 98765 43210'} />
+                )}
+                
                 <DetailItem icon="🏢" label="COMPANY" value={employee.companyName || 'Odoo'} />
                 <DetailItem icon="📁" label="DEPARTMENT" value="Human Resources" />
                 <DetailItem icon="👔" label="MANAGER" value="—" />
-                <DetailItem icon="📍" label="LOCATION" value="Bangalore, India" />
+                
+                {isEditing ? (
+                  <div>
+                    <p className="font-body text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-1 flex items-center gap-1.5">
+                      <span className="opacity-80">📍</span> ADDRESS
+                    </p>
+                    <input 
+                      type="text" 
+                      value={editAddress}
+                      onChange={(e) => setEditAddress(e.target.value)}
+                      className="w-full border-b-2 border-black bg-transparent py-1 font-body text-sm font-semibold text-black focus:outline-none"
+                    />
+                  </div>
+                ) : (
+                  <DetailItem icon="📍" label="LOCATION / ADDRESS" value={employee.address || 'Bangalore, India'} />
+                )}
               </div>
             </div>
           </div>

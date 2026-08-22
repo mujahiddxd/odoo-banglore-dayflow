@@ -18,6 +18,8 @@ import {
 
 export default function ReportsPage() {
   const [user, setUser] = useState<any>(null);
+  const [attendanceData, setAttendanceData] = useState<any[]>([]);
+  const [leaveData, setLeaveData] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -26,10 +28,22 @@ export default function ReportsPage() {
 
   const fetchData = async () => {
     try {
-      const userRes = await fetch('/api/auth/me');
+      const [userRes, reportsRes] = await Promise.all([
+        fetch('/api/auth/me'),
+        fetch('/api/reports')
+      ]);
+
       if (userRes.ok) {
         const userData = await userRes.json();
         setUser(userData.user);
+      }
+
+      if (reportsRes.ok) {
+        const reportsData = await reportsRes.json();
+        if (reportsData.success) {
+          setAttendanceData(reportsData.data.attendanceData);
+          setLeaveData(reportsData.data.leaveData);
+        }
       }
     } catch (e) {
       console.error(e);
@@ -37,21 +51,6 @@ export default function ReportsPage() {
       setLoading(false);
     }
   };
-
-  // Mock data for charts
-  const attendanceData = [
-    { name: 'Mon', Present: 40, Absent: 5, Leave: 2 },
-    { name: 'Tue', Present: 42, Absent: 3, Leave: 2 },
-    { name: 'Wed', Present: 45, Absent: 1, Leave: 1 },
-    { name: 'Thu', Present: 41, Absent: 4, Leave: 2 },
-    { name: 'Fri', Present: 38, Absent: 7, Leave: 2 },
-  ];
-
-  const leaveData = [
-    { name: 'Sick Leave', value: 30 },
-    { name: 'Casual Leave', value: 50 },
-    { name: 'Unpaid Leave', value: 20 },
-  ];
 
   const COLORS = ['#6d28d9', '#10b981', '#f59e0b', '#ef4444'];
 
@@ -106,25 +105,31 @@ export default function ReportsPage() {
           <div className="sketchy-card bg-white p-6 animate-fade-in" style={{ animationDelay: '0.2s' }}>
             <h2 className="font-headline text-xl font-bold mb-6">Leave Distribution (YTD)</h2>
             <div className="h-80">
-              <ResponsiveContainer width="100%" height="100%">
-                <PieChart>
-                  <Pie
-                    data={leaveData}
-                    cx="50%"
-                    cy="50%"
-                    labelLine={false}
-                    outerRadius={120}
-                    fill="#8884d8"
-                    dataKey="value"
-                    label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
-                  >
-                    {leaveData.map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                    ))}
-                  </Pie>
-                  <Tooltip contentStyle={{ borderRadius: '8px', border: '2px solid black', boxShadow: '4px 4px 0px black' }} />
-                </PieChart>
-              </ResponsiveContainer>
+              {leaveData.length === 0 ? (
+                <div className="w-full h-full flex items-center justify-center text-gray-400 font-body">
+                  No leave data for this year yet.
+                </div>
+              ) : (
+                <ResponsiveContainer width="100%" height="100%">
+                  <PieChart>
+                    <Pie
+                      data={leaveData}
+                      cx="50%"
+                      cy="50%"
+                      labelLine={false}
+                      outerRadius={120}
+                      fill="#8884d8"
+                      dataKey="value"
+                      label={({ name, percent }) => `${name} ${((percent || 0) * 100).toFixed(0)}%`}
+                    >
+                      {leaveData.map((entry, index) => (
+                        <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                      ))}
+                    </Pie>
+                    <Tooltip contentStyle={{ borderRadius: '8px', border: '2px solid black', boxShadow: '4px 4px 0px black' }} />
+                  </PieChart>
+                </ResponsiveContainer>
+              )}
             </div>
           </div>
 

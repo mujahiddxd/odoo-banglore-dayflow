@@ -88,10 +88,12 @@ export default function DashboardPage() {
       {/* Main Content */}
       <div className="max-w-7xl mx-auto px-4 py-6">
         <div className="flex flex-col lg:flex-row gap-6">
-          {/* Employee Grid */}
+          {/* Main Area */}
           <div className="flex-1">
-            {/* Header with Add button */}
-            <div className="flex items-center justify-between mb-6">
+            {(user?.role?.toLowerCase() === 'admin' || user?.role?.toLowerCase() === 'hr') ? (
+              <>
+                {/* Header with Add button */}
+                <div className="flex items-center justify-between mb-6">
               <div className="flex items-center gap-4">
                 <div>
                   <h1 className="font-headline text-2xl font-bold text-[var(--uxsg-ink)]">
@@ -149,6 +151,26 @@ export default function DashboardPage() {
                 Settings
               </button>
             </div>
+            </>
+            ) : (
+              <div className="flex flex-col items-center justify-center h-full min-h-[300px] sketchy-card bg-white p-8 animate-fade-in mt-2">
+                <div className="w-16 h-16 rounded-full bg-[var(--uxsg-teal)] flex items-center justify-center sketchy-border mb-4 overflow-hidden">
+                  {user?.avatar ? (
+                    <img src={user?.avatar} alt={user?.name} className="w-full h-full object-cover" />
+                  ) : (
+                    <span className="font-headline text-2xl font-bold text-[var(--uxsg-ink)]">
+                      {user?.name?.charAt(0).toUpperCase() || 'W'}
+                    </span>
+                  )}
+                </div>
+                <h1 className="font-headline text-3xl font-bold text-[var(--uxsg-ink)] text-center mb-2">
+                  Welcome back, {user?.name?.split(' ')[0]}!
+                </h1>
+                <p className="font-body text-gray-500 text-center max-w-md">
+                  You are checked in to your workspace. Use the panel on the right to manage your attendance.
+                </p>
+              </div>
+            )}
           </div>
 
           {/* Right sidebar — Check In/Out */}
@@ -164,20 +186,26 @@ export default function DashboardPage() {
                 <p className="font-headline text-lg font-bold">{employees.filter(e => e.status === 'present').length}</p>
                 <p className="font-body text-[10px] text-gray-500">Present</p>
               </div>
-              <div className="sketchy-card p-3 text-center animate-fade-in" style={{ animationDelay: '0.5s', opacity: 0 }}>
-                <div className="flex items-center justify-center gap-1 mb-1">
-                  <div className="status-dot status-dot-leave" style={{ width: '8px', height: '8px' }} />
-                </div>
-                <p className="font-headline text-lg font-bold">{employees.filter(e => e.status === 'leave').length}</p>
-                <p className="font-body text-[10px] text-gray-500">On Leave</p>
-              </div>
-              <div className="sketchy-card p-3 text-center animate-fade-in" style={{ animationDelay: '0.6s', opacity: 0 }}>
-                <div className="flex items-center justify-center gap-1 mb-1">
-                  <div className="status-dot status-dot-absent" style={{ width: '8px', height: '8px' }} />
-                </div>
-                <p className="font-headline text-lg font-bold">{employees.filter(e => e.status === 'absent').length}</p>
-                <p className="font-body text-[10px] text-gray-500">Absent</p>
-              </div>
+              
+              {(user?.role?.toLowerCase() === 'admin' || user?.role?.toLowerCase() === 'hr') && (
+                <>
+                  <div className="sketchy-card p-3 text-center animate-fade-in" style={{ animationDelay: '0.5s', opacity: 0 }}>
+                    <div className="flex items-center justify-center gap-1 mb-1">
+                      <div className="status-dot status-dot-leave" style={{ width: '8px', height: '8px' }} />
+                    </div>
+                    <p className="font-headline text-lg font-bold">{employees.filter(e => e.status === 'leave').length}</p>
+                    <p className="font-body text-[10px] text-gray-500">On Leave</p>
+                  </div>
+
+                  <div className="sketchy-card p-3 text-center animate-fade-in" style={{ animationDelay: '0.6s', opacity: 0 }}>
+                    <div className="flex items-center justify-center gap-1 mb-1">
+                      <div className="status-dot status-dot-absent" style={{ width: '8px', height: '8px' }} />
+                    </div>
+                    <p className="font-headline text-lg font-bold">{employees.filter(e => e.status === 'absent').length}</p>
+                    <p className="font-body text-[10px] text-gray-500">Absent</p>
+                  </div>
+                </>
+              )}
             </div>
           </div>
         </div>

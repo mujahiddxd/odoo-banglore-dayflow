@@ -13,7 +13,7 @@ export function ResumeTab({ resume, education, profileInfo }: ResumeTabProps) {
     <div className="space-y-8 animate-fade-in">
       <div className="flex justify-end mb-4">
         <Link href="/dashboard/setup-profile">
-          <SketchyButton variant="secondary" size="sm">
+          <SketchyButton variant="secondary">
             <span className="flex items-center gap-2">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
                 <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />

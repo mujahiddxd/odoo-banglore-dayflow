@@ -10,12 +10,12 @@ import { canViewEmployees } from '@/lib/permissions';
 // GET — List all employees (Admin/HR only)
 export async function GET() {
   try {
-    const session = await getSession();
-    if (!session) {
+    const user = await getCurrentUser();
+    if (!user) {
       return NextResponse.json({ success: false, error: 'Not authenticated' }, { status: 401 });
     }
 
-    if (session.role !== 'admin' && session.role !== 'hr' && session.role !== 'employee') {
+    if (!canViewEmployees(user)) {
       return NextResponse.json({ success: false, error: 'Forbidden: insufficient permissions' }, { status: 403 });
     }
 

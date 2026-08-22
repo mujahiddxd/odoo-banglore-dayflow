@@ -1,7 +1,7 @@
 import { SignJWT, jwtVerify } from 'jose';
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
-import type { AuthUser } from './types';
+import type { AuthUser, Role } from './types';
 import { initDatabase, queryOne } from './db';
 
 const JWT_SECRET = new TextEncoder().encode(
@@ -100,7 +100,7 @@ export async function getCurrentUser(): Promise<AuthUser | null> {
         employeeId: employee.employee_id,
         name: employee.name,
         email: employee.email,
-        role: userRole,
+        role: userRole as Role,
         avatar: employee.profile_picture || employee.avatar || '',
         position: employee.position || '',
         department: employee.department || '',
@@ -119,7 +119,7 @@ export async function getCurrentUser(): Promise<AuthUser | null> {
     employeeId: session.employeeId,
     name: session.name,
     email: session.email,
-    role: fallbackRole,
+    role: fallbackRole as Role,
     avatar: '',
     position: '',
     department: '',

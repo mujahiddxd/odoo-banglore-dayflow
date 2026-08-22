@@ -5,6 +5,7 @@ import {
   getRequest,
   approveRequest,
   rejectRequest,
+  cancelRequest,
 } from '@/lib/data/timeoff';
 import { createNotification } from '@/lib/notifications';
 import { sendLeaveStatusEmail } from '@/lib/email';

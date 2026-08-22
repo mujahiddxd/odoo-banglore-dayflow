@@ -79,8 +79,8 @@ export function PrivateInfoTab({
               <>
                 <SketchyInput type="date" label="Date of Birth" value={formData.date_of_birth} onChange={e => setFormData({...formData, date_of_birth: e.target.value})} />
                 <SketchyInput label="Nationality" value={formData.nationality} onChange={e => setFormData({...formData, nationality: e.target.value})} />
-                <SketchyInput label="Gender" value={formData.gender} onChange={e => setFormData({...formData, gender: e.target.value})} />
-                <SketchyInput label="Marital Status" value={formData.marital_status} onChange={e => setFormData({...formData, marital_status: e.target.value})} />
+                <SketchyInput label="Gender" value={formData.gender} onChange={e => setFormData({...formData, gender: e.target.value as any})} />
+                <SketchyInput label="Marital Status" value={formData.marital_status} onChange={e => setFormData({...formData, marital_status: e.target.value as any})} />
                 <SketchyInput type="date" label="Date of Joining" value={formData.date_of_joining} onChange={e => setFormData({...formData, date_of_joining: e.target.value})} />
               </>
             )}
