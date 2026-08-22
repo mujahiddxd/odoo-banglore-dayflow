@@ -46,3 +46,55 @@ export async function sendWelcomeEmail(to: string, name: string, employeeId: str
     console.error('Error sending welcome email:', error);
   }
 }
+
+export async function sendLeaveStatusEmail(to: string, name: string, status: string, leaveType: string, days: number, approverName: string) {
+  if (!process.env.SMTP_EMAIL || !process.env.SMTP_PASSWORD) {
+    return;
+  }
+  const mailOptions = {
+    from: `"Dayflow HR" <${process.env.SMTP_EMAIL}>`,
+    to,
+    subject: `Leave Request ${status.charAt(0).toUpperCase() + status.slice(1)}`,
+    html: `
+      <div style="font-family: Arial, sans-serif; padding: 20px; color: #333; max-width: 600px; margin: 0 auto; border: 1px solid #ddd; border-radius: 8px;">
+        <h2 style="color: ${status === 'approved' ? '#10b981' : '#ef4444'};">Leave Request ${status}</h2>
+        <p>Hi ${name},</p>
+        <p>Your request for <strong>${days} day(s)</strong> of <strong>${leaveType}</strong> has been <strong>${status}</strong> by ${approverName}.</p>
+        <div style="margin-top: 30px; text-align: center;">
+          <a href="${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/dashboard/timeoff" style="background: #6d28d9; color: white; text-decoration: none; padding: 10px 20px; border-radius: 5px; font-weight: bold;">View Details</a>
+        </div>
+      </div>
+    `,
+  };
+  try {
+    await transporter.sendMail(mailOptions);
+  } catch (error) {
+    console.error('Error sending leave email:', error);
+  }
+}
+
+export async function sendPayslipEmail(to: string, name: string, month: string, year: string) {
+  if (!process.env.SMTP_EMAIL || !process.env.SMTP_PASSWORD) {
+    return;
+  }
+  const mailOptions = {
+    from: `"Dayflow HR" <${process.env.SMTP_EMAIL}>`,
+    to,
+    subject: `Your Payslip for ${month} ${year} is ready`,
+    html: `
+      <div style="font-family: Arial, sans-serif; padding: 20px; color: #333; max-width: 600px; margin: 0 auto; border: 1px solid #ddd; border-radius: 8px;">
+        <h2 style="color: #6d28d9;">Payslip Available</h2>
+        <p>Hi ${name},</p>
+        <p>Your salary slip for <strong>${month} ${year}</strong> has been generated and is now available in your dashboard.</p>
+        <div style="margin-top: 30px; text-align: center;">
+          <a href="${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/dashboard/payslips" style="background: #6d28d9; color: white; text-decoration: none; padding: 10px 20px; border-radius: 5px; font-weight: bold;">View Payslip</a>
+        </div>
+      </div>
+    `,
+  };
+  try {
+    await transporter.sendMail(mailOptions);
+  } catch (error) {
+    console.error('Error sending payslip email:', error);
+  }
+}

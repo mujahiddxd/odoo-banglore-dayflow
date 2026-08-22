@@ -8,6 +8,7 @@ import type { NextRequest } from 'next/server';
 export function proxy(request: NextRequest) {
   const sessionCookie = request.cookies.get('dayflow-session');
   const { pathname } = request.nextUrl;
+  console.log(`[PROXY] ${request.method} ${pathname} | Cookie present: ${!!sessionCookie?.value}`);
 
   const isPublicPath =
     pathname === '/signin' ||

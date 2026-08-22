@@ -3,6 +3,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import AvatarDropdown from './AvatarDropdown';
+import NotificationBell from './NotificationBell';
 
 interface NavbarProps {
   userName: string;
@@ -14,6 +15,8 @@ const TABS = [
   { label: 'Employees', href: '/dashboard' },
   { label: 'Attendance', href: '/dashboard/attendance' },
   { label: 'Time Off', href: '/dashboard/timeoff' },
+  { label: 'Payslips', href: '/dashboard/payslips' },
+  { label: 'Reports', href: '/dashboard/reports', adminOnly: true },
 ];
 
 export default function Navbar({ userName, userAvatar, companyName }: NavbarProps) {
@@ -38,6 +41,9 @@ export default function Navbar({ userName, userAvatar, companyName }: NavbarProp
       {/* Nav Tabs */}
       <div className="flex items-center gap-6">
         {TABS.map((tab) => {
+          // If tab is adminOnly, wait until we know role from AvatarDropdown? 
+          // Actually, Navbar doesn't have role right now. It just has userName.
+          // Let's just show Reports to everyone and the page itself will block non-admins.
           const isActive = pathname === tab.href || 
             (tab.href !== '/dashboard' && pathname?.startsWith(tab.href));
           // Special case: "Employees" is active when on /dashboard exactly
@@ -77,8 +83,11 @@ export default function Navbar({ userName, userAvatar, companyName }: NavbarProp
         </div>
       </div>
 
-      {/* Profile Avatar */}
-      <AvatarDropdown userName={userName} userAvatar={userAvatar} />
+      {/* Notifications & Profile */}
+      <div className="flex items-center gap-4">
+        <NotificationBell />
+        <AvatarDropdown userName={userName} userAvatar={userAvatar} />
+      </div>
     </nav>
   );
 }

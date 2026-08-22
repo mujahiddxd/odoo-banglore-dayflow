@@ -8,6 +8,7 @@ import CheckInOut from '@/components/CheckInOut';
 import SketchyButton from '@/components/SketchyButton';
 import SketchyInput from '@/components/SketchyInput';
 import { AddEmployeeModal } from '@/components/employees/AddEmployeeModal';
+import CalendarView from '@/components/dashboard/CalendarView';
 
 interface Employee {
   id: number;
@@ -36,6 +37,7 @@ export default function DashboardPage() {
   const [employees, setEmployees] = useState<Employee[]>([]);
   const [loading, setLoading] = useState(true);
   const [showAddModal, setShowAddModal] = useState(false);
+  const [viewMode, setViewMode] = useState<'grid' | 'calendar'>('grid');
 
   useEffect(() => {
     fetchData();
@@ -92,13 +94,30 @@ export default function DashboardPage() {
           <div className="flex-1">
             {/* Header with Add button */}
             <div className="flex items-center justify-between mb-6">
-              <div>
-                <h1 className="font-headline text-2xl font-bold text-[var(--uxsg-ink)]">
-                  Employees
-                </h1>
-                <p className="font-body text-sm text-gray-500 mt-1">
-                  {employees.length} team member{employees.length !== 1 ? 's' : ''}
-                </p>
+              <div className="flex items-center gap-4">
+                <div>
+                  <h1 className="font-headline text-2xl font-bold text-[var(--uxsg-ink)]">
+                    Employees
+                  </h1>
+                  <p className="font-body text-sm text-gray-500 mt-1">
+                    {employees.length} team member{employees.length !== 1 ? 's' : ''}
+                  </p>
+                </div>
+                
+                <div className="flex bg-gray-100 rounded-lg p-1 border-2 border-[var(--uxsg-ink)] ml-4">
+                  <button 
+                    onClick={() => setViewMode('grid')}
+                    className={`px-3 py-1 text-sm font-bold rounded-md transition-colors ${viewMode === 'grid' ? 'bg-[var(--uxsg-ink)] text-white' : 'text-gray-600 hover:bg-gray-200'}`}
+                  >
+                    Grid View
+                  </button>
+                  <button 
+                    onClick={() => setViewMode('calendar')}
+                    className={`px-3 py-1 text-sm font-bold rounded-md transition-colors ${viewMode === 'calendar' ? 'bg-[var(--uxsg-ink)] text-white' : 'text-gray-600 hover:bg-gray-200'}`}
+                  >
+                    Calendar View
+                  </button>
+                </div>
               </div>
               {(user?.role?.toLowerCase() === 'admin' || user?.role?.toLowerCase() === 'hr' || user?.email === 'admin@dayflow.in') && (
                 <SketchyButton
@@ -110,8 +129,12 @@ export default function DashboardPage() {
               )}
             </div>
 
-            {/* Employee Grid */}
-            {employees.length === 0 ? (
+            {viewMode === 'calendar' ? (
+              <CalendarView />
+            ) : (
+              <>
+                {/* Employee Grid */}
+                {employees.length === 0 ? (
               <div className="sketchy-card p-12 text-center animate-fade-in">
                 <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="var(--uxsg-ink)" strokeWidth="1" strokeLinecap="round" className="mx-auto mb-4 opacity-30">
                   <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
@@ -135,6 +158,8 @@ export default function DashboardPage() {
                   />
                 ))}
               </div>
+                )}
+              </>
             )}
 
             {/* Settings link */}

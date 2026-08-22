@@ -24,6 +24,7 @@ export function AddEmployeeModal({ onClose, onSuccess }: AddEmployeeModalProps) 
       const res = await fetch('/api/employees', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
         body: JSON.stringify(newEmployee),
       });
 

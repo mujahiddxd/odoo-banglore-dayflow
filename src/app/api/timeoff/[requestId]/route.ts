@@ -5,8 +5,9 @@ import {
   getRequest,
   approveRequest,
   rejectRequest,
-  cancelRequest,
-} from '@/lib/data/timeoff';
+import { createNotification } from '@/lib/notifications';
+import { sendLeaveStatusEmail } from '@/lib/email';
+import { queryOne } from '@/lib/db';
 
 // PATCH — Approve, reject, or cancel a time-off request
 export async function PATCH(
@@ -53,6 +54,18 @@ export async function PATCH(
       if (!result.success) {
         return NextResponse.json({ error: result.error }, { status: 400 });
       }
+      // Send notification
+      await createNotification(
+        req.employeeId,
+        'Leave Request Approved',
+        `Your ${req.timeOffTypeName} request for ${req.days} days has been approved by ${user.name}.`,
+        '/dashboard/timeoff'
+      );
+      // Send email
+      const emp = await queryOne<{ email: string, name: string }>('SELECT email, name FROM employees WHERE employee_id = ?', [req.employeeId]);
+      if (emp) {
+        await sendLeaveStatusEmail(emp.email, emp.name, 'approved', req.timeOffTypeName, req.days, user.name);
+      }
       return NextResponse.json({ success: true });
     }
 
@@ -60,6 +73,18 @@ export async function PATCH(
       const result = rejectRequest(requestId, user.employeeId, user.name, comment);
       if (!result.success) {
         return NextResponse.json({ error: result.error }, { status: 400 });
+      }
+      // Send notification
+      await createNotification(
+        req.employeeId,
+        'Leave Request Rejected',
+        `Your ${req.timeOffTypeName} request for ${req.days} days was rejected.`,
+        '/dashboard/timeoff'
+      );
+      // Send email
+      const emp = await queryOne<{ email: string, name: string }>('SELECT email, name FROM employees WHERE employee_id = ?', [req.employeeId]);
+      if (emp) {
+        await sendLeaveStatusEmail(emp.email, emp.name, 'rejected', req.timeOffTypeName, req.days, user.name);
       }
       return NextResponse.json({ success: true });
     }
