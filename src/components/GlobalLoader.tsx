@@ -11,19 +11,13 @@ export default function GlobalLoader() {
 
   useEffect(() => {
     setMounted(true);
-    const hasSeenLoader = sessionStorage.getItem("hasSeenLoader");
 
-    if (hasSeenLoader) {
+    // Show loader for 3 seconds on every visit to this page
+    const timer = setTimeout(() => {
       setShowLoader(false);
-    } else {
-      // Set to hide after 3 seconds
-      const timer = setTimeout(() => {
-        setShowLoader(false);
-        sessionStorage.setItem("hasSeenLoader", "true");
-      }, 3000);
+    }, 3000);
 
-      return () => clearTimeout(timer);
-    }
+    return () => clearTimeout(timer);
   }, []);
 
   if (!mounted || !showLoader || pathname !== "/signin") return null;
