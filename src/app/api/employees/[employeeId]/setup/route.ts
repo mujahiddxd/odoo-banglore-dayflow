@@ -26,8 +26,8 @@ export async function POST(
 
     // Verify employee exists and needs setup
     const employee = await queryOne<{ id: number, first_login: boolean }>(
-      'SELECT id, first_login FROM employees WHERE employee_id = ? AND company_id = ?',
-      [targetEmployeeId, session.companyId]
+      'SELECT id, first_login FROM employees WHERE employee_id = ?',
+      [targetEmployeeId]
     );
 
     if (!employee) {
@@ -68,9 +68,8 @@ export async function POST(
     addUpdate('first_login', false);
 
     if (updates.length > 0) {
-      values.push(targetEmployeeId, session.companyId);
-      const query = `UPDATE employees SET ${updates.join(', ')} WHERE employee_id = ? AND company_id = ?`;
-      await execute(query, values);
+      const query = `UPDATE employees SET ${updates.join(', ')} WHERE employee_id = ?`;
+      await execute(query, [...values, targetEmployeeId]);
     }
 
     return NextResponse.json({ success: true, message: 'Profile setup completed' });

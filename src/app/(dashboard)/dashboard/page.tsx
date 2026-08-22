@@ -127,7 +127,7 @@ export default function DashboardPage() {
                 {employees.map((emp, i) => (
                   <EmployeeCard
                     key={emp.id}
-                    id={emp.id}
+                    id={emp.employee_id}
                     name={emp.name}
                     avatar={emp.avatar}
                     status={emp.status}

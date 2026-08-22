@@ -53,5 +53,20 @@ The engine recalculates components in a strict order whenever the monthly wage c
 - `api/employees/*`: Unified REST endpoints for fetching employee directories and profiles. 
 - `api/employees/[employeeId]/salary`: Secure endpoint enforcing RBAC (Role-Based Access Control). Returns `403 Forbidden` if a non-admin attempts to access another employee's salary.
 
-## 5. Middleware Strategy
+## 5. Employee Lifecycle & Strict RBAC
+To enforce organizational security and data integrity:
+- **No Public Registration**: The public `/signup` route has been permanently removed. Employees cannot self-register.
+- **Admin Provisioning**: Employees are strictly created by Admins via the `AddEmployeeModal`. 
+- **Deterministic ID Generation**: The system automatically generates unique Employee IDs using the format `OI{FN}{LN}{YEAR}{SERIAL}` (e.g., `OIJODO20260001`), ensuring sequential tracking across the company.
+- **Secure Onboarding**: Upon creation, a temporary password is auto-generated. When the new employee logs in for the first time, they are redirected to the Profile Setup flow where they must change their password and upload their resume before accessing the system.
+- **Directory Visibility**: The Employee Directory filters out `admin` accounts when viewed by standard employees, preserving administrative anonymity.
+
+## 6. Time, Attendance & Payroll Engine
+A comprehensive suite has been introduced to manage employee working hours and automate payroll inputs:
+- **Attendance Tracking**: Includes `/dashboard/attendance` for real-time Check In/Out. An advanced `api/attendance/networks/route.ts` is available to enforce location/network-based checking.
+- **Time Off Management**: Integrated into `/dashboard/timeoff` with allocative balances (Sick, Casual, Earned) and request workflows.
+- **Payroll Engine (`src/lib/payroll-engine.ts`)**: Serves as the central authority linking attendance and leave data. It dynamically calculates *Payable Days* for any given month by computing Present Days + Paid Leave Days, subtracting unpaid absences and weekends based on employee-specific scheduling (e.g., 5-day vs 6-day work weeks).
+
+## 7. Middleware Strategy
 A `middleware.ts` file is included at the root. Currently, it is set to a **pass-through** state (`NextResponse.next()`) to ensure the hybrid auth architecture functions smoothly during the hackathon, while preserving the skeleton for edge-based route protection in production.
+

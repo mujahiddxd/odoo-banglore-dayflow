@@ -416,15 +416,16 @@ export function createRequest(
     return { success: false, error: 'Invalid date range' };
   }
 
-  // Check allocation balance
+    // Check allocation balance
   if (type.allocationRequired) {
     const empAllocations = allocations.get(employeeId) ?? [];
-    const alloc = empAllocations.find(
+    let alloc = empAllocations.find(
       (a) => a.timeOffTypeId === timeOffTypeId && a.year === new Date().getFullYear()
     );
 
+    // Auto-allocate if they don't have one
     if (!alloc) {
-      return { success: false, error: 'No allocation found for this time off type' };
+      alloc = createOrUpdateAllocation(employeeId, timeOffTypeId, type.maxAllocation || 30);
     }
 
     if (!type.allowNegativeBalance && alloc.remainingDays < days) {

@@ -39,3 +39,13 @@ Instead of overriding one stream with the other, the application was refactored 
 
 ## Current State
 The repository is now fully unified, compiling with **0 errors**, and successfully implements all features from both workstreams into a single, cohesive, Sketchy-themed HRMS.
+
+## Recent Updates: Single-Tenant & Security Hardening
+Following the initial merge, the system underwent a major refinement to act as a **single-tenant** environment for "Odoo":
+1. **Branding Overhaul**: All references to DayFlow were migrated to Odoo to support the single-tenant requirement.
+2. **Strict Provisioning**: The public `/signup` functionality was entirely eradicated. The application now enforces a strict RBAC policy where only Admins can create new employees.
+3. **Automated Onboarding**: 
+   - When an Admin creates a user, the system automatically assigns a deterministic ID (`OIJODO20260001`) and a temporary secure password.
+   - The new user is forced to undergo a mandatory Profile Setup on their first login, where they must change their system-generated password and upload their resume for AI-based skill extraction.
+4. **Data Privacy**: Queries fetching the employee directory were updated to strictly hide `admin` accounts from standard `employee` roles, ensuring administrative anonymity.
+5. **Attendance & Payroll Integration**: The repository recently absorbed a massive update linking Attendance, Time-Off Management, and a new `payroll-engine.ts`. This integration calculates true "Payable Days" by automatically factoring in check-ins, approved leaves, and strict work-schedule rules (e.g. 5-day vs 6-day work weeks).

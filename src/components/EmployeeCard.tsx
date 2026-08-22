@@ -4,7 +4,7 @@ import React from 'react';
 import { useRouter } from 'next/navigation';
 
 interface EmployeeCardProps {
-  id: number;
+  id: string;
   name: string;
   avatar?: string;
   status: 'present' | 'leave' | 'absent';
@@ -35,12 +35,12 @@ export default function EmployeeCard({ id, name, avatar, status, index = 0 }: Em
 
   return (
     <div
-      onClick={() => router.push(`/profile/${id}`)}
+      onClick={() => router.push(`/dashboard/employees/${id}`)}
       className={`sketchy-card p-4 cursor-pointer group animate-fade-in stagger-${index + 1}`}
       style={{ opacity: 0 }}
       role="button"
       tabIndex={0}
-      onKeyDown={(e) => { if (e.key === 'Enter') router.push(`/profile/${id}`); }}
+      onKeyDown={(e) => { if (e.key === 'Enter') router.push(`/dashboard/employees/${id}`); }}
     >
       {/* Status dot */}
       <div className="absolute top-3 right-3">

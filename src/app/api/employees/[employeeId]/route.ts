@@ -30,8 +30,8 @@ export async function GET(
     await initDatabase();
 
     const employee = await queryOne<any>(
-      'SELECT * FROM employees WHERE employee_id = ? AND company_id = ?',
-      [targetEmployeeId, session.companyId]
+      'SELECT * FROM employees WHERE employee_id = ?',
+      [targetEmployeeId]
     );
 
     if (!employee) {
@@ -130,7 +130,7 @@ export async function PATCH(
     await initDatabase();
 
     // Verify employee exists
-    const employee = await queryOne<{ id: number }>('SELECT id FROM employees WHERE employee_id = ? AND company_id = ?', [targetEmployeeId, session.companyId]);
+    const employee = await queryOne<{ id: number }>('SELECT id FROM employees WHERE employee_id = ?', [targetEmployeeId]);
     if (!employee) {
       return NextResponse.json({ success: false, error: 'Employee not found' }, { status: 404 });
     }
@@ -161,11 +161,8 @@ export async function PATCH(
       return NextResponse.json({ success: false, error: 'No valid fields to update or missing permissions' }, { status: 400 });
     }
 
-    values.push(targetEmployeeId);
-    values.push(session.companyId);
-
-    const query = `UPDATE employees SET ${updates.join(', ')} WHERE employee_id = ? AND company_id = ?`;
-    await execute(query, values);
+    const query = `UPDATE employees SET ${updates.join(', ')} WHERE employee_id = ?`;
+    await execute(query, [...values, targetEmployeeId]);
 
     return NextResponse.json({ success: true, message: 'Profile updated successfully' });
 

@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getCurrentUser } from '@/lib/auth';
 import { hasPermission, PERMISSIONS } from '@/lib/permissions';
-import { getEmployee } from '@/lib/data/employees';
+
 import {
   getRequestsForEmployee,
   getAllRequests,
@@ -76,8 +76,7 @@ export async function POST(request: NextRequest) {
     // Employee is ALWAYS taken from the authenticated session
     // NEVER trust frontend-supplied employeeId
     const employeeId = user.employeeId;
-    const employee = getEmployee(employeeId);
-    const employeeName = employee?.name ?? user.name;
+    const employeeName = user.name;
 
     const result = createRequest(
       employeeId,

@@ -27,7 +27,7 @@ export async function POST(request: NextRequest) {
       password_hash: string;
       role: string;
       first_login: boolean;
-    }>('SELECT id, employee_id, company_id, name, email, password_hash, role, first_login FROM employees WHERE email = ?', [email]);
+    }>('SELECT id, employee_id, company_id, name, email, password_hash, role, first_login FROM employees WHERE email = ? OR employee_id = ?', [email, email]);
 
     if (!employee) {
       return NextResponse.json(

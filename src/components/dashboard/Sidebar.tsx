@@ -18,7 +18,8 @@ export function Sidebar({ user }: { user: AuthUser }) {
 
   async function handleLogout() {
     await fetch("/api/auth/logout", { method: "POST" });
-    router.push("/login");
+    router.push("/signin");
+    router.refresh();
   }
 
   const initials = user.name

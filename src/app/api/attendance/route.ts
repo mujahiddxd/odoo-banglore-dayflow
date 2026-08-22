@@ -10,7 +10,7 @@ import {
 import { getApprovedLeaveDatesForMonth } from '@/lib/data/timeoff';
 import { getSalaryConfig } from '@/lib/data/salary';
 import { hasPermission, PERMISSIONS } from '@/lib/permissions';
-import { getEmployee } from '@/lib/data/employees';
+import { query, queryOne } from '@/lib/db';
 
 /**
  * Extract the real client IP from request headers.
@@ -47,7 +47,7 @@ export async function GET(request: NextRequest) {
         // Admin viewing a specific employee
         const records = getAttendanceForMonth(filterEmployeeId, year, month);
         const leaveDates = getApprovedLeaveDatesForMonth(filterEmployeeId, year, month);
-        const emp = getEmployee(filterEmployeeId);
+        const emp = await queryOne<{ name: string }>('SELECT name FROM employees WHERE employee_id = ?', [filterEmployeeId]);
         return NextResponse.json({
           success: true,
           data: {
@@ -57,9 +57,12 @@ export async function GET(request: NextRequest) {
         });
       }
       // Admin viewing all employees
+      const dbEmployees = await query<{ employee_id: string, name: string, department: string }>('SELECT employee_id, name, department FROM employees');
+      const empMap = new Map(dbEmployees.map((e) => [e.employee_id, e]));
+
       const records = getAllAttendanceForMonth(year, month);
       const enriched = records.map((r) => {
-        const emp = getEmployee(r.employeeId);
+        const emp = empMap.get(r.employeeId);
         return { ...r, employeeName: emp?.name ?? '', department: emp?.department ?? '' };
       });
       return NextResponse.json({ success: true, data: { records: enriched } });

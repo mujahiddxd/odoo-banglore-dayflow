@@ -77,8 +77,8 @@ export default function SignInPage() {
           <form onSubmit={handleSubmit} className="space-y-5">
             <SketchyInput
               label="Login Id/Email"
-              type="email"
-              placeholder="you@company.com"
+              type="text"
+              placeholder="you@company.com or Odoo ID"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
@@ -134,7 +134,7 @@ export default function SignInPage() {
         {/* Decorative sticky note */}
         <div className="sticky-note sticky-note-blue mt-6 max-w-xs mx-auto animate-float" style={{ animationDelay: '0.5s' }}>
           <p className="text-sm text-center">
-            ✏️ Enter your company email and password to get started!
+            ✏️ Enter your Employee ID or email to get started!
           </p>
         </div>
       </div>

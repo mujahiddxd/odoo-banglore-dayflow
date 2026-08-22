@@ -3,6 +3,7 @@ import bcrypt from 'bcryptjs';
 import { getSession, getCurrentUser } from '@/lib/auth';
 import { initDatabase, query, execute } from '@/lib/db';
 import { generateEmployeeId, generateRandomPassword } from '@/lib/employee-id';
+import { sendWelcomeEmail } from '@/lib/email';
 
 import { canViewEmployees } from '@/lib/permissions';
 
@@ -21,42 +22,21 @@ export async function GET() {
     await initDatabase();
     const today = new Date().toISOString().split('T')[0];
 
-    let employees;
-    if (session.role === 'admin' || session.role === 'hr') {
-      employees = await query<{
-        id: number;
-        employee_id: string;
-        name: string;
-        email: string;
-        phone: string;
-        role: string;
-        avatar: string;
-        profile_picture: string;
-        position: string;
-        department: string;
-        created_at: string;
-      }>(
-        'SELECT id, employee_id, name, email, phone, role, avatar, profile_picture, position, department, created_at FROM employees WHERE company_id = ? ORDER BY created_at DESC',
-        [session.companyId]
-      );
-    } else {
-      employees = await query<{
-        id: number;
-        employee_id: string;
-        name: string;
-        email: string;
-        phone: string;
-        role: string;
-        avatar: string;
-        profile_picture: string;
-        position: string;
-        department: string;
-        created_at: string;
-      }>(
-        "SELECT id, employee_id, name, email, phone, role, avatar, profile_picture, position, department, created_at FROM employees WHERE company_id = ? AND role != 'admin' ORDER BY created_at DESC",
-        [session.companyId]
-      );
-    }
+    const employees = await query<{
+      id: number;
+      employee_id: string;
+      name: string;
+      email: string;
+      phone: string;
+      role: string;
+      avatar: string;
+      profile_picture: string;
+      position: string;
+      department: string;
+      created_at: string;
+    }>(
+      "SELECT id, employee_id, name, email, phone, role, avatar, profile_picture, position, department, created_at FROM employees WHERE role != 'admin' ORDER BY created_at DESC"
+    );
 
     // Get today's attendance for each employee
     const attendance = await query<{
@@ -67,8 +47,8 @@ export async function GET() {
       `SELECT a.employee_id, a.check_in, a.check_out 
        FROM attendance a 
        JOIN employees e ON a.employee_id = e.id 
-       WHERE e.company_id = ? AND a.date = ?`,
-      [session.companyId, today]
+       WHERE a.date = ?`,
+      [today]
     );
 
     const attendanceMap = new Map(
@@ -137,6 +117,9 @@ export async function POST(request: NextRequest) {
       'INSERT INTO employees (employee_id, company_id, name, email, phone, password_hash, role, position, department, first_login) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
       [employeeId, session.companyId, name, email, phone || null, passwordHash, role, position, department, true]
     );
+
+    // Send the welcome email asynchronously (don't await it to avoid blocking the response)
+    sendWelcomeEmail(email, name, employeeId, randomPassword).catch(console.error);
 
     return NextResponse.json({
       success: true,
