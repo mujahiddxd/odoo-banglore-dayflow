@@ -19,11 +19,10 @@ export default function FloatingBackground() {
   }[]>([]);
 
   useEffect(() => {
-    // Generate random items only on the client side to avoid hydration mismatch
     const generatedItems = Array.from({ length: 25 }).map((_, i) => {
-      const scale = 0.4 + Math.random() * 2.2;
-      // Elements that are smaller (further away) should be blurrier for depth of field
-      const blur = Math.max(0, (1.2 - scale) * 4); 
+      const scale = 0.6 + Math.random() * 1.5;
+      // Elements that are smaller (further away) get a very slight blur
+      const blur = Math.max(0, (1 - scale) * 2); 
       
       return {
         id: i,
@@ -33,7 +32,7 @@ export default function FloatingBackground() {
         duration: 20 + Math.random() * 40, // 20-60 seconds for very slow, premium movement
         delay: Math.random() * -40, // negative delay so they start immediately at different phases
         scale,
-        opacity: 0.03 + Math.random() * 0.12, // Subtle opacity so it's not distracting
+        opacity: 0.15 + Math.random() * 0.3, // Higher opacity to be clearly visible
         blur,
       };
     });
