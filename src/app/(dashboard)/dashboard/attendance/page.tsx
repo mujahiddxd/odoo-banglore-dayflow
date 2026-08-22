@@ -158,10 +158,16 @@ export default function AttendancePage() {
             {isAdmin && !filterEmployee && (
               <div className="animate-fade-in">
                 <h2 className="font-headline text-lg font-bold mb-3">
-                  All Employees — Today
+                  All Employees — {year === new Date().getFullYear() && month === new Date().getMonth() + 1 ? 'Today' : `${month}/${year}`}
                 </h2>
                 <AttendanceTable
-                  records={allRecords as AttendanceRecord[]}
+                  records={(allRecords as AttendanceRecord[]).filter(r => {
+                    if (year === new Date().getFullYear() && month === new Date().getMonth() + 1) {
+                      const todayStr = new Date().toLocaleDateString('en-CA'); // YYYY-MM-DD local time
+                      return r.date === todayStr;
+                    }
+                    return true;
+                  })}
                   loading={loading}
                   showEmployee
                   employeeNames={Object.fromEntries(

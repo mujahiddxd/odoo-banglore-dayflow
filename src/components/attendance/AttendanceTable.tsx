@@ -124,58 +124,85 @@ export default function AttendanceTable({
             </tr>
           </thead>
           <tbody>
-            {sortedDates.map((dateStr) => {
-              const record = records.find((r) => r.date === dateStr);
-              const leave = leaveDateMap.get(dateStr);
-              const date = new Date(dateStr + 'T00:00:00');
-              const dayName = DAY_NAMES[date.getDay()];
-              const isWeekend = date.getDay() === 0 || date.getDay() === 6;
+            {showEmployee ? (
+              records.length === 0 ? (
+                <tr><td colSpan={9} className="text-center py-4">No records found.</td></tr>
+              ) : (
+                records.map((record, idx) => {
+                  const date = new Date(record.date + 'T00:00:00');
+                  const dayName = DAY_NAMES[date.getDay()];
+                  return (
+                    <tr
+                      key={`${record.employeeId}-${record.date}-${idx}`}
+                      className="border-b transition-colors hover:bg-[rgba(252,221,42,0.05)]"
+                      style={{ borderColor: 'var(--uxsg-border-light)' }}
+                    >
+                      <td className="py-3 px-4 font-medium tabular-nums">
+                        {date.toLocaleDateString('en-IN', { day: '2-digit', month: '2-digit', year: 'numeric' })}
+                      </td>
+                      <td className="py-3 px-4">{dayName}</td>
+                      <td className="py-3 px-4 font-semibold">
+                        {employeeNames[record.employeeId] ?? record.employeeId}
+                      </td>
+                      <td className="py-3 px-4 tabular-nums">{formatTime(record.checkIn)}</td>
+                      <td className="py-3 px-4 tabular-nums">{formatTime(record.checkOut)}</td>
+                      <td className="py-3 px-4 tabular-nums">{formatHM(record.workingMinutes)}</td>
+                      <td className="py-3 px-4 tabular-nums">{formatHM(record.breakMinutes)}</td>
+                      <td className="py-3 px-4 tabular-nums">{formatHM(record.extraMinutes)}</td>
+                      <td className="py-3 px-4">{statusBadge(record.status)}</td>
+                    </tr>
+                  );
+                })
+              )
+            ) : (
+              sortedDates.map((dateStr) => {
+                const record = records.find((r) => r.date === dateStr);
+                const leave = leaveDateMap.get(dateStr);
+                const date = new Date(dateStr + 'T00:00:00');
+                const dayName = DAY_NAMES[date.getDay()];
+                const isWeekend = date.getDay() === 0 || date.getDay() === 6;
 
-              return (
-                <tr
-                  key={dateStr}
-                  className="border-b transition-colors hover:bg-[rgba(252,221,42,0.05)]"
-                  style={{
-                    borderColor: 'var(--uxsg-border-light)',
-                    opacity: isWeekend ? 0.5 : 1,
-                  }}
-                >
-                  <td className="py-3 px-4 font-medium tabular-nums">
-                    {date.toLocaleDateString('en-IN', { day: '2-digit', month: '2-digit', year: 'numeric' })}
-                  </td>
-                  <td className="py-3 px-4">{dayName}</td>
-                  {showEmployee && (
-                    <td className="py-3 px-4 font-semibold">
-                      {record ? (employeeNames[record.employeeId] ?? record.employeeId) : '—'}
+                return (
+                  <tr
+                    key={dateStr}
+                    className="border-b transition-colors hover:bg-[rgba(252,221,42,0.05)]"
+                    style={{
+                      borderColor: 'var(--uxsg-border-light)',
+                      opacity: isWeekend ? 0.5 : 1,
+                    }}
+                  >
+                    <td className="py-3 px-4 font-medium tabular-nums">
+                      {date.toLocaleDateString('en-IN', { day: '2-digit', month: '2-digit', year: 'numeric' })}
                     </td>
-                  )}
-                  <td className="py-3 px-4 tabular-nums">
-                    {record ? formatTime(record.checkIn) : '—'}
-                  </td>
-                  <td className="py-3 px-4 tabular-nums">
-                    {record ? formatTime(record.checkOut) : '—'}
-                  </td>
-                  <td className="py-3 px-4 tabular-nums">
-                    {record ? formatHM(record.workingMinutes) : '—'}
-                  </td>
-                  <td className="py-3 px-4 tabular-nums">
-                    {record ? formatHM(record.breakMinutes) : '—'}
-                  </td>
-                  <td className="py-3 px-4 tabular-nums">
-                    {record ? formatHM(record.extraMinutes) : '—'}
-                  </td>
-                  <td className="py-3 px-4">
-                    {leave
-                      ? statusBadge('ON_LEAVE', true, leave.type)
-                      : record
-                        ? statusBadge(record.status)
-                        : isWeekend
-                          ? <span className="font-body text-xs opacity-40">Weekend</span>
-                          : statusBadge('ABSENT')}
-                  </td>
-                </tr>
-              );
-            })}
+                    <td className="py-3 px-4">{dayName}</td>
+                    <td className="py-3 px-4 tabular-nums">
+                      {record ? formatTime(record.checkIn) : '—'}
+                    </td>
+                    <td className="py-3 px-4 tabular-nums">
+                      {record ? formatTime(record.checkOut) : '—'}
+                    </td>
+                    <td className="py-3 px-4 tabular-nums">
+                      {record ? formatHM(record.workingMinutes) : '—'}
+                    </td>
+                    <td className="py-3 px-4 tabular-nums">
+                      {record ? formatHM(record.breakMinutes) : '—'}
+                    </td>
+                    <td className="py-3 px-4 tabular-nums">
+                      {record ? formatHM(record.extraMinutes) : '—'}
+                    </td>
+                    <td className="py-3 px-4">
+                      {leave
+                        ? statusBadge('ON_LEAVE', true, leave.type)
+                        : record
+                          ? statusBadge(record.status)
+                          : isWeekend
+                            ? <span className="font-body text-xs opacity-40">Weekend</span>
+                            : statusBadge('ABSENT')}
+                    </td>
+                  </tr>
+                );
+              })
+            )}
           </tbody>
         </table>
       </div>

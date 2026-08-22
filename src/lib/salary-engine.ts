@@ -166,6 +166,10 @@ export function validateSalaryConfig(config: SalaryConfig): string | null {
     return 'Monthly wage must be positive.';
   }
 
+  if (config.monthlyWage > 1000000000) { // 1 Crore INR in paise
+    return 'Monthly wage cannot exceed ₹1,00,00,000 (1 Crore).';
+  }
+
   // Compute to check for negative fixed allowance
   const computed = calculateSalary(config);
 

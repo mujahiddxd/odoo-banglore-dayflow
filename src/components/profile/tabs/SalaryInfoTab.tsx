@@ -173,6 +173,7 @@ export function SalaryInfoTab({
                 value={paiseToRupees(editConfig.monthlyWage)}
                 onChange={(e) => updateWage(Number(e.target.value))}
                 min={0}
+                max={10000000}
                 step={1000}
               />
             ) : (
