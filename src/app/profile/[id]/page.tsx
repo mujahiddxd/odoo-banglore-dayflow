@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import Navbar from '@/components/Navbar';
 
@@ -25,6 +25,53 @@ export default function ProfilePage() {
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState('resume');
   const [user, setUser] = useState<any>(null); // To show in navbar
+  const [isUploading, setIsUploading] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const handleImageClick = () => {
+    if (user?.employee_id === employee?.id || ['admin', 'hr'].includes(user?.role?.toLowerCase())) {
+      fileInputRef.current?.click();
+    }
+  };
+
+  const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (!file.type.startsWith('image/')) {
+      alert('Please select an image file');
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = async (event) => {
+      const base64Str = event.target?.result as string;
+      setIsUploading(true);
+
+      try {
+        const res = await fetch(`/api/employees/${employee?.id}/avatar`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ avatar: base64Str }),
+        });
+
+        if (res.ok) {
+          setEmployee(prev => prev ? { ...prev, avatar: base64Str } : prev);
+          if (user?.employee_id === employee?.id) {
+            setUser((prev: any) => prev ? { ...prev, avatar: base64Str } : prev);
+          }
+        } else {
+          alert('Failed to upload image');
+        }
+      } catch (err) {
+        console.error(err);
+        alert('An error occurred while uploading');
+      } finally {
+        setIsUploading(false);
+      }
+    };
+    reader.readAsDataURL(file);
+  };
 
   useEffect(() => {
     fetchData();
@@ -96,11 +143,34 @@ export default function ProfilePage() {
             </div>
 
             {/* Avatar */}
-            <div className="w-32 h-32 rounded-full flex-shrink-0 flex items-center justify-center border-[3px] border-black shadow-[4px_4px_0px_rgba(0,0,0,1)] relative overflow-hidden" 
-                 style={{ background: 'linear-gradient(135deg, #a8d4e6 0%, #FCDD2A 100%)' }}>
-              <span className="font-headline text-4xl font-bold text-white drop-shadow-md">
-                {initials}
-              </span>
+            <div 
+              className="w-32 h-32 rounded-full flex-shrink-0 flex items-center justify-center border-[3px] border-black shadow-[4px_4px_0px_rgba(0,0,0,1)] relative overflow-hidden group cursor-pointer" 
+              style={{ background: 'linear-gradient(135deg, #a8d4e6 0%, #FCDD2A 100%)' }}
+              onClick={handleImageClick}
+            >
+              {employee.avatar ? (
+                <img src={employee.avatar} alt={employee.name} className="w-full h-full object-cover" />
+              ) : (
+                <span className="font-headline text-4xl font-bold text-white drop-shadow-md">
+                  {initials}
+                </span>
+              )}
+              
+              {(user?.employee_id === employee.id || ['admin', 'hr'].includes(user?.role?.toLowerCase())) && (
+                <div className="absolute inset-0 bg-black/50 hidden group-hover:flex items-center justify-center transition-all">
+                  <span className="text-white font-body text-xs font-bold text-center">
+                    {isUploading ? 'Uploading...' : 'Change Photo'}
+                  </span>
+                </div>
+              )}
+              
+              <input 
+                type="file" 
+                ref={fileInputRef} 
+                onChange={handleImageChange} 
+                accept="image/*" 
+                className="hidden" 
+              />
             </div>
 
             {/* User Info */}
