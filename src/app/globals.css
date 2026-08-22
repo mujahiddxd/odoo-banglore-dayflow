@@ -1,4 +1,4 @@
-<<<<<<< HEAD @import url('https://fonts.googleapis.com/css2?family=Cabin+Sketch:wght@400;700&family=Sora:wght@300;400;500;600;700;800;900&family=Patrick+Hand&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cabin+Sketch:wght@400;700&family=Patrick+Hand&family=Sora:wght@300;400;500;600;700;800;900&display=swap');
 @import "tailwindcss";
 
 /* ============================================================
@@ -14,9 +14,24 @@
   --uxsg-teal: #61C4D8;
   --uxsg-white: #ffffff;
   --uxsg-orange: #e67e22;
+  --uxsg-cta-pink: #c850c0;
   --uxsg-gray: rgba(90, 90, 90, 0.6);
+  --uxsg-tape: rgba(90, 90, 90, 0.6);
   --uxsg-light-gray: #c8c8c8;
+  --uxsg-border: #090907;
+  --uxsg-border-light: #c8c8c8;
   --uxsg-blue-sticky: #a8d4e6;
+  --uxsg-sticky-blue: #a8d4e6;
+  --uxsg-sticky-yellow: #FCDD2A;
+
+  /* Status */
+  --status-present: #22c55e;
+  --status-leave: #f59e0b;
+  --status-absent: #ef4444;
+
+  /* Shadows */
+  --shadow-sketchy: 3px 3px 0px var(--uxsg-ink);
+  --shadow-sketchy-sm: 2px 2px 0px var(--uxsg-ink);
 
   /* Semantic */
   --background: var(--uxsg-paper);
@@ -28,6 +43,7 @@
   --font-headline: 'Cabin Sketch', cursive;
   --font-body: 'Sora', sans-serif;
   --font-hand: 'Patrick Hand', cursive;
+  --font-handwritten: 'Patrick Hand', cursive;
 
   /* Spacing */
   --sidebar-width: 260px;
@@ -36,104 +52,49 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  =======@import url('https://fonts.googleapis.com/css2?family=Cabin+Sketch:wght@400;700&family=Patrick+Hand&family=Sora:wght@300;400;500;600;700;800&display=swap');
-  @import "tailwindcss";
-
-  /* ─── Design System: Sketchy Creative (from design.md) ─── */
-
-  :root {
-    /* Primary */
-    --uxsg-ink: #090907;
-    --uxsg-paper: #faf9f6;
-
-    /* Accents */
-    --uxsg-yellow: #FCDD2A;
-    --uxsg-teal: #61C4D8;
-
-    /* Surfaces */
-    --uxsg-white: #ffffff;
-    --uxsg-sticky-blue: #a8d4e6;
-    --uxsg-sticky-yellow: #FCDD2A;
-    --uxsg-tape: rgba(90, 90, 90, 0.6);
-
-    /* Borders */
-    --uxsg-border: #090907;
-    --uxsg-border-light: #c8c8c8;
-
-    /* CTA */
-    --uxsg-orange: #e67e22;
-    --uxsg-cta-pink: #c850c0;
-
-    /* Status */
-    --status-present: #22c55e;
-    --status-leave: #f59e0b;
-    --status-absent: #ef4444;
-
-    /* Shadows */
-    --shadow-sketchy: 3px 3px 0px var(--uxsg-ink);
-    --shadow-sketchy-sm: 2px 2px 0px var(--uxsg-ink);
-
-    /* Font families */
-    --font-headline: 'Cabin Sketch', cursive;
-    --font-body: 'Sora', sans-serif;
-    --font-handwritten: 'Patrick Hand', cursive;
-  }
-
-  @theme inline {
-    >>>>>>>origin/main --color-uxsg-ink: var(--uxsg-ink);
-    --color-uxsg-paper: var(--uxsg-paper);
-    --color-uxsg-yellow: var(--uxsg-yellow);
-    --color-uxsg-teal: var(--uxsg-teal);
-    <<<<<<< HEAD --color-uxsg-orange: var(--uxsg-orange);
-    --color-uxsg-blue-sticky: var(--uxsg-blue-sticky);
-    --color-uxsg-white: var(--uxsg-white);
-    --font-sans: var(--font-body);
-    --font-mono: var(--font-geist-mono);
-  }
-
-  /* ============================================================
-   Base styles
-   ============================================================ */
-  =======--color-uxsg-white: var(--uxsg-white);
-  --color-uxsg-sticky-blue: var(--uxsg-sticky-blue);
-  --color-uxsg-sticky-yellow: var(--uxsg-sticky-yellow);
+  --color-uxsg-ink: var(--uxsg-ink);
+  --color-uxsg-paper: var(--uxsg-paper);
+  --color-uxsg-yellow: var(--uxsg-yellow);
+  --color-uxsg-teal: var(--uxsg-teal);
   --color-uxsg-orange: var(--uxsg-orange);
   --color-uxsg-cta-pink: var(--uxsg-cta-pink);
+  --color-uxsg-blue-sticky: var(--uxsg-blue-sticky);
+  --color-uxsg-sticky-blue: var(--uxsg-sticky-blue);
+  --color-uxsg-sticky-yellow: var(--uxsg-sticky-yellow);
+  --color-uxsg-white: var(--uxsg-white);
   --color-status-present: var(--status-present);
   --color-status-leave: var(--status-leave);
   --color-status-absent: var(--status-absent);
+  --font-sans: var(--font-body);
   --font-headline: var(--font-headline);
   --font-body: var(--font-body);
   --font-handwritten: var(--font-handwritten);
 }
 
-/* ─── Base Styles ─── */
->>>>>>>origin/main * {
+/* ============================================================
+   Base styles
+   ============================================================ */
+
+* {
   box-sizing: border-box;
 }
 
 body {
-  <<<<<<< HEAD background: var(--background);
+  background: var(--background);
   color: var(--foreground);
   font-family: var(--font-body);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  =======font-family: var(--font-body);
-  color: var(--uxsg-ink);
-  background: var(--uxsg-paper);
-  min-height: 100vh;
-  -webkit-font-smoothing: antialiased;
-  >>>>>>>origin/main
 }
 
 /* Paper background with subtle noise */
 .paper-bg {
   background-color: var(--uxsg-paper);
-  <<<<<<< HEAD background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.03'/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.03'/%3E%3C/svg%3E");
 }
 
 /* ============================================================
-   Sketchy hand-drawn borders (SVG filter approach)
+   Sketchy hand-drawn borders
    ============================================================ */
 
 .sketchy-border {
@@ -142,7 +103,6 @@ body {
   position: relative;
 }
 
-/* Wobble effect via slightly randomized border-radius on corners */
 .sketchy-border-wobble {
   border: 2px solid var(--uxsg-ink);
   border-radius: 255px 15px 225px 15px / 15px 225px 15px 255px;
@@ -153,14 +113,31 @@ body {
   border-radius: 255px 15px 225px 15px / 15px 225px 15px 255px;
 }
 
+/* Box styles */
+.sketchy-box {
+  border: 2px solid var(--uxsg-ink);
+  background: var(--uxsg-white);
+  box-shadow: var(--shadow-sketchy);
+  position: relative;
+}
+
+.sketchy-box-yellow {
+  border: 2px solid var(--uxsg-ink);
+  background: var(--uxsg-yellow);
+  box-shadow: var(--shadow-sketchy);
+}
+
+.sketchy-box-teal {
+  border: 2px solid var(--uxsg-ink);
+  background: var(--uxsg-teal);
+  box-shadow: var(--shadow-sketchy);
+}
+
 /* ============================================================
    Typography
    ============================================================ */
-=======background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
-}
 
-/* ─── Typography ─── */
->>>>>>>origin/main .font-headline {
+.font-headline {
   font-family: var(--font-headline);
 }
 
@@ -168,7 +145,7 @@ body {
   font-family: var(--font-body);
 }
 
-<<<<<<< HEAD .font-hand {
+.font-hand, .font-handwritten {
   font-family: var(--font-hand);
 }
 
@@ -181,898 +158,418 @@ body {
   border: 2px solid var(--uxsg-ink);
   border-radius: 255px 15px 225px 15px / 15px 225px 15px 255px;
   position: relative;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
 
-  =======.font-handwritten {
-    font-family: var(--font-handwritten);
-  }
+.sketchy-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 4px 4px 0px var(--uxsg-ink);
+}
 
-  /* ─── Sketchy Border System ─── */
+.sketchy-card .tape, .tape {
+  position: absolute;
+  width: 40px;
+  height: 16px;
+  background: var(--uxsg-gray);
+  border-radius: 2px;
+  z-index: 10;
+}
 
-  .sketchy-border {
-    position: relative;
-    border: 2px solid var(--uxsg-ink);
-    border-radius: 255px 15px 225px 15px / 15px 225px 15px 255px;
-  }
+.sketchy-card .tape-tl, .tape-tl {
+  top: -8px;
+  left: 16px;
+  transform: rotate(-8deg);
+}
 
-  .sketchy-border-sm {
-    position: relative;
-    border: 1.5px solid var(--uxsg-ink);
-    border-radius: 255px 15px 225px 15px / 15px 225px 15px 255px;
-  }
+.sketchy-card .tape-br, .tape-br {
+  bottom: -8px;
+  right: 16px;
+  transform: rotate(8deg);
+}
 
-  .sketchy-border-white {
-    border: 2px solid var(--uxsg-white);
-    border-radius: 255px 15px 225px 15px / 15px 225px 15px 255px;
-  }
+.tape-tr {
+  top: -8px;
+  right: 16px;
+  transform: rotate(6deg);
+}
 
-  /* ─── Sketchy Shadow ─── */
-
-  .sketchy-shadow {
-    box-shadow: var(--shadow-sketchy);
-  }
-
-  .sketchy-shadow-sm {
-    box-shadow: var(--shadow-sketchy-sm);
-  }
-
-  /* ─── Cards ─── */
-
-  .sketchy-card {
-    background: var(--uxsg-white);
-    border: 2px solid var(--uxsg-ink);
-    border-radius: 255px 15px 225px 15px / 15px 225px 15px 255px;
-    box-shadow: var(--shadow-sketchy);
-    >>>>>>>origin/main transition: transform 0.2s ease, box-shadow 0.2s ease;
-  }
-
-  .sketchy-card:hover {
-    <<<<<<< HEAD transform: translateY(-2px);
-    box-shadow: 4px 4px 0px var(--uxsg-ink);
-  }
-
-  .sketchy-card .tape {
-    position: absolute;
-    width: 40px;
-    height: 16px;
-    background: var(--uxsg-gray);
-    border-radius: 2px;
-  }
-
-  .sketchy-card .tape-tl {
-    top: -8px;
-    left: 16px;
-    transform: rotate(-8deg);
-  }
-
-  .sketchy-card .tape-br {
-    bottom: -8px;
-    right: 16px;
-    transform: rotate(8deg);
-  }
-
-  /* ============================================================
+/* ============================================================
    Sketchy button styles
    ============================================================ */
 
-  .sketchy-btn {
-    font-family: var(--font-body);
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.15s ease;
-    border: 2px solid var(--uxsg-ink);
-    border-radius: 255px 15px 225px 15px / 15px 225px 15px 255px;
-    padding: 10px 24px;
-    font-size: 0.875rem;
-    =======transform: translate(-1px, -1px);
-    box-shadow: 4px 4px 0px var(--uxsg-ink);
-  }
+.sketchy-btn, .btn-sketchy {
+  font-family: var(--font-body);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  border: 2px solid var(--uxsg-ink);
+  border-radius: 255px 15px 225px 15px / 15px 225px 15px 255px;
+  padding: 10px 24px;
+  font-size: 0.875rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
 
-  .sketchy-card-dark {
-    background: var(--uxsg-ink);
-    color: var(--uxsg-white);
-    border: 2px solid var(--uxsg-ink);
-    border-radius: 255px 15px 225px 15px / 15px 225px 15px 255px;
-    box-shadow: 3px 3px 0px rgba(0, 0, 0, 0.3);
-  }
+.sketchy-btn:active, .btn-sketchy:active {
+  transform: translateY(1px);
+}
 
-  /* ─── Tape Corners ─── */
+.sketchy-btn-primary, .btn-sketchy-primary {
+  background: var(--uxsg-ink);
+  color: var(--uxsg-white);
+}
 
-  .tape-corner {
-    position: absolute;
-    width: 40px;
-    height: 16px;
-    background: var(--uxsg-tape);
-    border-radius: 1px;
-    filter: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='r'%3E%3CfeTurbulence baseFrequency='0.05'/%3E%3CfeDisplacementMap in='SourceGraphic' scale='2'/%3E%3C/filter%3E%3C/svg%3E#r");
-  }
+.sketchy-btn-primary:hover, .btn-sketchy-primary:hover {
+  box-shadow: 3px 3px 0px var(--uxsg-yellow);
+}
 
-  .tape-corner-tl {
-    top: -8px;
-    left: 12px;
-    transform: rotate(-5deg);
-  }
+.sketchy-btn-secondary, .btn-sketchy-secondary {
+  background: var(--uxsg-white);
+  color: var(--uxsg-ink);
+}
 
-  .tape-corner-br {
-    bottom: -8px;
-    right: 12px;
-    transform: rotate(5deg);
-  }
+.sketchy-btn-secondary:hover, .btn-sketchy-secondary:hover {
+  box-shadow: 3px 3px 0px var(--uxsg-teal);
+}
 
-  .tape-corner-tr {
-    top: -8px;
-    right: 12px;
-    transform: rotate(5deg);
-  }
+.sketchy-btn-yellow, .btn-sketchy-yellow {
+  background: var(--uxsg-yellow);
+  color: var(--uxsg-ink);
+}
 
-  .tape-corner-bl {
-    bottom: -8px;
-    left: 12px;
-    transform: rotate(-5deg);
-  }
+.sketchy-btn-yellow:hover, .btn-sketchy-yellow:hover {
+  box-shadow: 3px 3px 0px var(--uxsg-ink);
+}
 
-  /* ─── Buttons ─── */
+.sketchy-btn-teal, .btn-sketchy-teal {
+  background: var(--uxsg-teal);
+  color: var(--uxsg-ink);
+}
 
-  .btn-sketchy {
-    font-family: var(--font-body);
-    font-weight: 600;
-    padding: 10px 28px;
-    border: 2px solid var(--uxsg-ink);
-    border-radius: 255px 15px 225px 15px / 15px 225px 15px 255px;
-    cursor: pointer;
-    transition: all 0.15s ease;
-    position: relative;
-    >>>>>>>origin/main display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    <<<<<<< HEAD
-  }
+.btn-rsvp {
+  border: 2px solid var(--uxsg-ink);
+  border-radius: 9999px;
+  background: var(--uxsg-orange);
+  color: #ffffff;
+  font-family: var(--font-body);
+  font-weight: 700;
+  padding: 8px 24px;
+  transition: all 0.15s ease;
+  box-shadow: var(--shadow-sketchy-sm);
+}
 
-  .sketchy-btn:active {
-    transform: translateY(1px);
-  }
+.btn-rsvp:hover {
+  transform: translate(-1px, -1px);
+  box-shadow: var(--shadow-sketchy);
+}
 
-  .sketchy-btn-primary {
-    background: var(--uxsg-ink);
-    color: var(--uxsg-white);
-  }
-
-  .sketchy-btn-primary:hover {
-    box-shadow: 3px 3px 0px var(--uxsg-yellow);
-  }
-
-  .sketchy-btn-secondary {
-    background: var(--uxsg-white);
-    color: var(--uxsg-ink);
-  }
-
-  .sketchy-btn-secondary:hover {
-    box-shadow: 3px 3px 0px var(--uxsg-teal);
-  }
-
-  .sketchy-btn-yellow {
-    background: var(--uxsg-yellow);
-    color: var(--uxsg-ink);
-  }
-
-  .sketchy-btn-yellow:hover {
-    box-shadow: 3px 3px 0px var(--uxsg-ink);
-  }
-
-  .sketchy-btn-teal {
-    background: var(--uxsg-teal);
-    color: var(--uxsg-ink);
-  }
-
-  /* ============================================================
+/* ============================================================
    Sketchy input
    ============================================================ */
 
-  .sketchy-input {
-    font-family: var(--font-body);
-    border: 1.5px solid var(--uxsg-ink);
-    border-radius: 255px 15px 225px 15px / 15px 225px 15px 255px;
-    padding: 10px 16px;
-    font-size: 0.875rem;
-    background: var(--uxsg-white);
-    color: var(--uxsg-ink);
-    outline: none;
-    transition: box-shadow 0.15s ease;
-    width: 100%;
-  }
+.sketchy-input, .input-sketchy {
+  font-family: var(--font-body);
+  border: 1.5px solid var(--uxsg-ink);
+  border-radius: 255px 15px 225px 15px / 15px 225px 15px 255px;
+  padding: 10px 16px;
+  font-size: 0.875rem;
+  background: var(--uxsg-white);
+  color: var(--uxsg-ink);
+  outline: none;
+  transition: box-shadow 0.15s ease;
+  width: 100%;
+}
 
-  .sketchy-input:focus {
-    box-shadow: 3px 3px 0px var(--uxsg-teal);
-  }
+.sketchy-input:focus, .input-sketchy:focus {
+  box-shadow: 3px 3px 0px var(--uxsg-teal);
+}
 
-  .sketchy-input:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-    background: #f5f5f0;
-  }
+.sketchy-input:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  background: #f5f5f0;
+}
 
-  /* ============================================================
+/* ============================================================
    Tabs
    ============================================================ */
 
-  .sketchy-tabs {
-    display: flex;
-    gap: 0;
-    border-bottom: 2px solid var(--uxsg-ink);
-    overflow-x: auto;
-  }
+.sketchy-tabs {
+  display: flex;
+  gap: 0;
+  border-bottom: 2px solid var(--uxsg-ink);
+  overflow-x: auto;
+}
 
-  .sketchy-tab {
-    padding: 12px 24px;
-    font-family: var(--font-body);
-    font-weight: 500;
-    font-size: 0.875rem;
-    color: var(--uxsg-ink);
-    cursor: pointer;
-    background: transparent;
-    border: none;
-    border-bottom: 3px solid transparent;
-    transition: all 0.15s ease;
-    white-space: nowrap;
-    opacity: 0.6;
-  }
+.sketchy-tab {
+  padding: 12px 24px;
+  font-family: var(--font-body);
+  font-weight: 500;
+  font-size: 0.875rem;
+  color: var(--uxsg-ink);
+  cursor: pointer;
+  background: transparent;
+  border: none;
+  border-bottom: 3px solid transparent;
+  transition: all 0.15s ease;
+  white-space: nowrap;
+  opacity: 0.6;
+}
 
-  .sketchy-tab:hover {
-    opacity: 1;
-    background: rgba(252, 221, 42, 0.1);
-  }
+.sketchy-tab:hover {
+  opacity: 1;
+  background: rgba(252, 221, 42, 0.1);
+}
 
-  .sketchy-tab.active {
-    opacity: 1;
-    border-bottom-color: var(--uxsg-yellow);
-    font-weight: 700;
-  }
+.sketchy-tab.active {
+  opacity: 1;
+  border-bottom-color: var(--uxsg-yellow);
+  font-weight: 700;
+}
 
-  /* ============================================================
+/* ============================================================
    Badge / Pill
    ============================================================ */
 
-  .sketchy-badge {
-    display: inline-flex;
-    align-items: center;
-    padding: 4px 12px;
-    font-size: 0.75rem;
-    font-weight: 600;
-    border: 1.5px solid var(--uxsg-ink);
-    border-radius: 255px 15px 225px 15px / 15px 225px 15px 255px;
-    background: var(--uxsg-white);
-    color: var(--uxsg-ink);
-  }
+.sketchy-badge, .badge-sketchy {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  border: 1.5px solid var(--uxsg-ink);
+  border-radius: 255px 15px 225px 15px / 15px 225px 15px 255px;
+  background: var(--uxsg-white);
+  color: var(--uxsg-ink);
+}
 
-  .sketchy-badge-yellow {
-    background: var(--uxsg-yellow);
-  }
+.sketchy-badge-yellow {
+  background: var(--uxsg-yellow);
+}
 
-  .sketchy-badge-teal {
-    background: var(--uxsg-teal);
-  }
+.sketchy-badge-teal {
+  background: var(--uxsg-teal);
+}
 
-  .sketchy-badge-ink {
-    background: var(--uxsg-ink);
-    color: var(--uxsg-white);
-  }
+.sketchy-badge-ink {
+  background: var(--uxsg-ink);
+  color: var(--uxsg-white);
+}
 
-  /* ============================================================
+/* ============================================================
    Sticky note
    ============================================================ */
 
-  .sticky-note {
-    font-family: var(--font-hand);
-    padding: 16px 20px;
-    border: 1.5px solid var(--uxsg-ink);
-    font-size: 1rem;
-    line-height: 1.6;
-  }
+.sticky-note {
+  font-family: var(--font-hand);
+  padding: 16px 20px;
+  border: 1.5px solid var(--uxsg-ink);
+  font-size: 1rem;
+  line-height: 1.6;
+  position: relative;
+}
 
-  .sticky-note-yellow {
-    background: var(--uxsg-yellow);
-    transform: rotate(-1deg);
-  }
+.sticky-note-yellow {
+  background: var(--uxsg-yellow);
+  transform: rotate(-1deg);
+}
 
-  .sticky-note-blue {
-    background: var(--uxsg-blue-sticky);
-    transform: rotate(1deg);
-  }
+.sticky-note-blue {
+  background: var(--uxsg-blue-sticky);
+  transform: rotate(1deg);
+}
 
-  /* ============================================================
+/* ============================================================
    Sidebar styles
    ============================================================ */
 
-  .sidebar {
-    width: var(--sidebar-width);
-    background: var(--uxsg-white);
-    border-right: 2px solid var(--uxsg-ink);
-    height: 100vh;
-    position: fixed;
-    left: 0;
-    top: 0;
-    display: flex;
-    flex-direction: column;
-    z-index: 50;
-  }
+.sidebar {
+  width: var(--sidebar-width);
+  background: var(--uxsg-white);
+  border-right: 2px solid var(--uxsg-ink);
+  height: 100vh;
+  position: fixed;
+  left: 0;
+  top: 0;
+  display: flex;
+  flex-direction: column;
+  z-index: 50;
+}
 
-  .sidebar-nav-item {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 12px 20px;
-    font-family: var(--font-body);
-    font-size: 0.875rem;
-    font-weight: 500;
-    color: var(--uxsg-ink);
-    text-decoration: none;
-    transition: all 0.15s ease;
-    border-left: 3px solid transparent;
-  }
+.sidebar-nav-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 20px;
+  font-family: var(--font-body);
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--uxsg-ink);
+  text-decoration: none;
+  transition: all 0.15s ease;
+  border-left: 3px solid transparent;
+}
 
-  .sidebar-nav-item:hover {
-    background: rgba(252, 221, 42, 0.15);
-  }
+.sidebar-nav-item:hover {
+  background: rgba(252, 221, 42, 0.15);
+}
 
-  .sidebar-nav-item.active {
-    background: rgba(252, 221, 42, 0.2);
-    border-left-color: var(--uxsg-yellow);
-    font-weight: 700;
-  }
+.sidebar-nav-item.active {
+  background: rgba(252, 221, 42, 0.2);
+  border-left-color: var(--uxsg-yellow);
+  font-weight: 700;
+}
 
-  /* ============================================================
+/* ============================================================
    Profile specific
    ============================================================ */
 
-  .profile-avatar {
-    width: 100px;
-    height: 100px;
-    border-radius: 50%;
-    border: 3px solid var(--uxsg-ink);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-family: var(--font-headline);
-    font-size: 2rem;
-    font-weight: 700;
-    color: var(--uxsg-white);
-    background: linear-gradient(135deg, var(--uxsg-teal), var(--uxsg-yellow));
-  }
+.profile-avatar {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  border: 3px solid var(--uxsg-ink);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-headline);
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--uxsg-white);
+  background: linear-gradient(135deg, var(--uxsg-teal), var(--uxsg-yellow));
+}
 
-  .info-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 16px;
-  }
+.info-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 16px;
+}
 
-  .info-field {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-  }
+.info-field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
 
-  .info-field-label {
-    font-size: 0.75rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    opacity: 0.6;
-  }
+.info-field-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  opacity: 0.6;
+}
 
-  .info-field-value {
-    font-size: 0.9rem;
-    font-weight: 500;
-  }
+.info-field-value {
+  font-size: 0.9rem;
+  font-weight: 500;
+}
 
-  /* ============================================================
+/* ============================================================
    Salary component card
    ============================================================ */
 
-  .salary-component {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 12px 16px;
-    border-bottom: 1px dashed var(--uxsg-light-gray);
-  }
+.salary-component {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 16px;
+  border-bottom: 1px dashed var(--uxsg-light-gray);
+}
 
-  .salary-component:last-child {
-    border-bottom: none;
-  }
+.salary-component:last-child {
+  border-bottom: none;
+}
 
-  .salary-component-name {
-    font-weight: 500;
-    font-size: 0.875rem;
-  }
+.salary-component-name {
+  font-weight: 500;
+  font-size: 0.875rem;
+}
 
-  .salary-component-basis {
-    font-size: 0.75rem;
-    opacity: 0.6;
-    margin-top: 2px;
-  }
+.salary-component-basis {
+  font-size: 0.75rem;
+  opacity: 0.6;
+  margin-top: 2px;
+}
 
-  .salary-component-amount {
-    font-weight: 700;
-    font-size: 0.9rem;
-    font-variant-numeric: tabular-nums;
-  }
+.salary-component-amount {
+  font-weight: 700;
+  font-size: 0.9rem;
+  font-variant-numeric: tabular-nums;
+}
 
-  .salary-component-percentage {
-    font-size: 0.75rem;
-    opacity: 0.6;
-    margin-left: 8px;
-  }
+.salary-component-percentage {
+  font-size: 0.75rem;
+  opacity: 0.6;
+  margin-left: 8px;
+}
 
-  /* ============================================================
+/* ============================================================
    Animations
    ============================================================ */
 
-  @keyframes fadeIn {
-    from {
-      opacity: 0;
-      transform: translateY(8px);
-    }
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
 
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
+.animate-fade-in {
+  animation: fadeIn 0.3s ease forwards;
+}
 
-  .animate-fade-in {
-    animation: fadeIn 0.3s ease forwards;
-  }
+@keyframes slideIn {
+  from { opacity: 0; transform: translateX(-12px); }
+  to { opacity: 1; transform: translateX(0); }
+}
 
-  @keyframes slideIn {
-    from {
-      opacity: 0;
-      transform: translateX(-12px);
-    }
+.animate-slide-in {
+  animation: slideIn 0.25s ease forwards;
+}
 
-    to {
-      opacity: 1;
-      transform: translateX(0);
-    }
-  }
+.stagger-children > * {
+  opacity: 0;
+  animation: fadeIn 0.3s ease forwards;
+}
 
-  .animate-slide-in {
-    animation: slideIn 0.25s ease forwards;
-  }
+.stagger-children > *:nth-child(1) { animation-delay: 0.05s; }
+.stagger-children > *:nth-child(2) { animation-delay: 0.1s; }
+.stagger-children > *:nth-child(3) { animation-delay: 0.15s; }
+.stagger-children > *:nth-child(4) { animation-delay: 0.2s; }
+.stagger-children > *:nth-child(5) { animation-delay: 0.25s; }
+.stagger-children > *:nth-child(6) { animation-delay: 0.3s; }
 
-  /* Staggered children animation */
-  .stagger-children>* {
-    opacity: 0;
-    animation: fadeIn 0.3s ease forwards;
-  }
-
-  .stagger-children>*:nth-child(1) {
-    animation-delay: 0.05s;
-  }
-
-  .stagger-children>*:nth-child(2) {
-    animation-delay: 0.1s;
-  }
-
-  .stagger-children>*:nth-child(3) {
-    animation-delay: 0.15s;
-  }
-
-  .stagger-children>*:nth-child(4) {
-    animation-delay: 0.2s;
-  }
-
-  .stagger-children>*:nth-child(5) {
-    animation-delay: 0.25s;
-  }
-
-  .stagger-children>*:nth-child(6) {
-    animation-delay: 0.3s;
-  }
-
-  /* ============================================================
-   Responsive
+/* ============================================================
+   Responsive & Scrollbar
    ============================================================ */
 
-  @media (max-width: 768px) {
-    .sidebar {
-      transform: translateX(-100%);
-      transition: transform 0.3s ease;
-    }
-
-    .sidebar.open {
-      transform: translateX(0);
-    }
-
-    :root {
-      --sidebar-width: 240px;
-    }
+@media (max-width: 768px) {
+  .sidebar {
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
   }
-
-  /* ============================================================
-   Scrollbar
-   ============================================================ */
-
-  ::-webkit-scrollbar {
-    width: 6px;
-    height: 6px;
-    =======letter-spacing: 0.02em;
+  .sidebar.open {
+    transform: translateX(0);
   }
-
-  .btn-sketchy:active {
-    transform: translate(2px, 2px);
-    box-shadow: none !important;
+  :root {
+    --sidebar-width: 240px;
   }
-
-  /* Primary — filled black */
-  .btn-primary {
-    background: var(--uxsg-ink);
-    color: var(--uxsg-white);
-    box-shadow: var(--shadow-sketchy-sm);
-  }
-
-  .btn-primary:hover {
-    background: #1a1a18;
-    box-shadow: 3px 3px 0px var(--uxsg-ink);
-    transform: translate(-1px, -1px);
-  }
-
-  /* Secondary — outline */
-  .btn-secondary {
-    background: var(--uxsg-white);
-    color: var(--uxsg-ink);
-    box-shadow: var(--shadow-sketchy-sm);
-  }
-
-  .btn-secondary:hover {
-    background: var(--uxsg-paper);
-    box-shadow: 3px 3px 0px var(--uxsg-ink);
-    transform: translate(-1px, -1px);
-  }
-
-  /* CTA — pink/magenta gradient (matching wireframe sign-in buttons) */
-  .btn-cta {
-    background: linear-gradient(135deg, #c850c0, #e8679a);
-    color: var(--uxsg-white);
-    border-color: var(--uxsg-ink);
-    box-shadow: var(--shadow-sketchy-sm);
-    font-weight: 700;
-    letter-spacing: 0.06em;
-  }
-
-  .btn-cta:hover {
-    background: linear-gradient(135deg, #b840b0, #d8578a);
-    box-shadow: 3px 3px 0px var(--uxsg-ink);
-    transform: translate(-1px, -1px);
-  }
-
-  /* RSVP — orange pill */
-  .btn-rsvp {
-    background: var(--uxsg-orange);
-    color: var(--uxsg-white);
-    border-radius: 9999px;
-    box-shadow: var(--shadow-sketchy-sm);
-  }
-
-  .btn-rsvp:hover {
-    background: #d57118;
-    box-shadow: 3px 3px 0px var(--uxsg-ink);
-    transform: translate(-1px, -1px);
-  }
-
-  /* ─── Inputs ─── */
-
-  .sketchy-input {
-    font-family: var(--font-body);
-    width: 100%;
-    padding: 10px 14px;
-    background: var(--uxsg-white);
-    border: 1.5px solid var(--uxsg-ink);
-    border-radius: 255px 15px 225px 15px / 15px 225px 15px 255px;
-    color: var(--uxsg-ink);
-    font-size: 0.95rem;
-    outline: none;
-    transition: box-shadow 0.15s ease, border-color 0.15s ease;
-  }
-
-  .sketchy-input:focus {
-    box-shadow: 0 0 0 2px var(--uxsg-teal), var(--shadow-sketchy-sm);
-    border-color: var(--uxsg-teal);
-  }
-
-  .sketchy-input::placeholder {
-    color: #999;
-    font-style: italic;
-  }
-
-  /* ─── Sticky Notes ─── */
-
-  .sticky-note {
-    font-family: var(--font-handwritten);
-    padding: 20px 24px;
-    border: 1.5px solid var(--uxsg-ink);
-    position: relative;
-    line-height: 1.6;
-    font-size: 1.05rem;
-  }
-
-  .sticky-note-blue {
-    background: var(--uxsg-sticky-blue);
-    transform: rotate(-1deg);
-  }
-
-  .sticky-note-yellow {
-    background: var(--uxsg-sticky-yellow);
-    transform: rotate(1.5deg);
-  }
-
-  /* ─── Status Indicators ─── */
-
-  .status-dot {
-    width: 12px;
-    height: 12px;
-    border-radius: 50%;
-    border: 1.5px solid var(--uxsg-ink);
-    display: inline-block;
-    flex-shrink: 0;
-  }
-
-  .status-dot-present {
-    background: var(--status-present);
-    animation: pulse-green 2s infinite;
-  }
-
-  .status-dot-leave {
-    background: var(--status-leave);
-  }
-
-  .status-dot-absent {
-    background: var(--status-absent);
-    animation: pulse-red 2s infinite;
-  }
-
-  /* ─── Wavy Underlines ─── */
-
-  .wavy-underline {
-    text-decoration: underline;
-    text-decoration-style: wavy;
-    text-decoration-color: var(--uxsg-ink);
-    text-underline-offset: 6px;
-    text-decoration-thickness: 2px;
-  }
-
-  .wavy-underline-yellow {
-    text-decoration: underline;
-    text-decoration-style: wavy;
-    text-decoration-color: var(--uxsg-yellow);
-    text-underline-offset: 6px;
-    text-decoration-thickness: 2.5px;
-  }
-
-  /* ─── Nav Tabs ─── */
-
-  .nav-tab {
-    font-family: var(--font-body);
-    font-weight: 500;
-    padding: 8px 18px;
-    border: 1.5px solid transparent;
-    border-radius: 255px 15px 225px 15px / 15px 225px 15px 255px;
-    color: var(--uxsg-white);
-    cursor: pointer;
-    transition: all 0.15s ease;
-    background: transparent;
-    font-size: 0.9rem;
-  }
-
-  .nav-tab:hover {
-    background: rgba(255, 255, 255, 0.1);
-    border-color: rgba(255, 255, 255, 0.2);
-  }
-
-  .nav-tab-active {
-    background: var(--uxsg-teal);
-    color: var(--uxsg-ink);
-    border-color: var(--uxsg-ink);
-    font-weight: 700;
-  }
-
-  /* ─── Scrollbar ─── */
-
-  ::-webkit-scrollbar {
-    width: 8px;
-    height: 8px;
-    >>>>>>>origin/main
-  }
-
-  ::-webkit-scrollbar-track {
-    background: var(--uxsg-paper);
-  }
-
-  ::-webkit-scrollbar-thumb {
-    <<<<<<< HEAD background: var(--uxsg-light-gray);
-    border-radius: 3px;
-  }
-
-  ::-webkit-scrollbar-thumb:hover {
-    background: var(--uxsg-ink);
-    =======background: var(--uxsg-ink);
-    border-radius: 255px 15px 225px 15px / 15px 225px 15px 255px;
-  }
-
-  /* ─── Animations ─── */
-
-  @keyframes fade-in {
-    from {
-      opacity: 0;
-      transform: translateY(8px);
-    }
-
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-
-  @keyframes slide-up {
-    from {
-      opacity: 0;
-      transform: translateY(20px);
-    }
-
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-
-  @keyframes wobble {
-
-    0%,
-    100% {
-      transform: rotate(0deg);
-    }
-
-    25% {
-      transform: rotate(-1deg);
-    }
-
-    75% {
-      transform: rotate(1deg);
-    }
-  }
-
-  @keyframes pulse-green {
-
-    0%,
-    100% {
-      box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.5);
-    }
-
-    50% {
-      box-shadow: 0 0 0 4px rgba(34, 197, 94, 0);
-    }
-  }
-
-  @keyframes pulse-red {
-
-    0%,
-    100% {
-      box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.5);
-    }
-
-    50% {
-      box-shadow: 0 0 0 4px rgba(239, 68, 68, 0);
-    }
-  }
-
-  @keyframes float {
-
-    0%,
-    100% {
-      transform: translateY(0px) rotate(-1deg);
-    }
-
-    50% {
-      transform: translateY(-4px) rotate(1deg);
-    }
-  }
-
-  @keyframes scribble-in {
-    from {
-      stroke-dashoffset: 1000;
-    }
-
-    to {
-      stroke-dashoffset: 0;
-    }
-  }
-
-  .animate-fade-in {
-    animation: fade-in 0.4s ease-out forwards;
-  }
-
-  .animate-slide-up {
-    animation: slide-up 0.5s ease-out forwards;
-  }
-
-  .animate-wobble {
-    animation: wobble 3s ease-in-out infinite;
-  }
-
-  .animate-float {
-    animation: float 4s ease-in-out infinite;
-  }
-
-  /* Staggered fade-in for grid items */
-  .stagger-1 {
-    animation-delay: 0.05s;
-  }
-
-  .stagger-2 {
-    animation-delay: 0.1s;
-  }
-
-  .stagger-3 {
-    animation-delay: 0.15s;
-  }
-
-  .stagger-4 {
-    animation-delay: 0.2s;
-  }
-
-  .stagger-5 {
-    animation-delay: 0.25s;
-  }
-
-  .stagger-6 {
-    animation-delay: 0.3s;
-  }
-
-  .stagger-7 {
-    animation-delay: 0.35s;
-  }
-
-  .stagger-8 {
-    animation-delay: 0.4s;
-  }
-
-  .stagger-9 {
-    animation-delay: 0.45s;
-  }
-
-  /* ─── Decorative Doodles ─── */
-
-  .doodle-arrow {
-    position: absolute;
-    pointer-events: none;
-    z-index: 0;
-  }
-
-  /* ─── Misc ─── */
-
-  .line-clamp-2 {
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-  }
-
-  /* Glass-like overlay for modals */
-  .glass-overlay {
-    background: rgba(250, 249, 246, 0.85);
-    backdrop-filter: blur(8px);
-  }
-
-  /* ─── Responsive ─── */
-
-  @media (max-width: 768px) {
-    .sketchy-card {
-      box-shadow: var(--shadow-sketchy-sm);
-    }
-
-    .btn-sketchy {
-      padding: 8px 20px;
-      font-size: 0.9rem;
-    }
-
-    >>>>>>>origin/main
-  }
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--uxsg-paper);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--uxsg-light-gray);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--uxsg-ink);
+}

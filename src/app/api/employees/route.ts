@@ -1,93 +1,104 @@
-<<<<<<< HEAD
-// GET /api/employees — List employees (Admin only for full list)
-import { getCurrentUser } from '@/lib/auth';
+import { NextRequest, NextResponse } from 'next/server';
+import bcrypt from 'bcryptjs';
+import { getSession, getCurrentUser } from '@/lib/auth';
+import { initDatabase, query, execute } from '@/lib/db';
+import { generateEmployeeId, generateRandomPassword } from '@/lib/employee-id';
 import { getAllEmployees } from '@/lib/data/employees';
 import { canViewEmployees } from '@/lib/permissions';
 
-export async function GET() {
-  const user = await getCurrentUser();
-
-  if (!user) {
-    return Response.json(
-      { success: false, error: 'Not authenticated' },
-      { status: 401 }
-    );
-  }
-
-  if (!canViewEmployees(user)) {
-    return Response.json(
-      { success: false, error: 'Forbidden: insufficient permissions' },
-      { status: 403 }
-    );
-  }
-
-  const employees = getAllEmployees();
-  return Response.json({ success: true, data: employees });
-=======
-import { NextRequest, NextResponse } from 'next/server';
-import bcrypt from 'bcryptjs';
-import { getSession } from '@/lib/auth';
-import { initDatabase, query, execute } from '@/lib/db';
-import { generateEmployeeId, generateRandomPassword } from '@/lib/employee-id';
-
-// GET — List all employees for the current user's company
+// GET — List all employees (Admin/HR only or company members)
 export async function GET() {
   try {
     const session = await getSession();
-    if (!session) {
-      return NextResponse.json({ error: 'Not authenticated' }, { status: 401 });
+    if (session) {
+      try {
+        await initDatabase();
+        const today = new Date().toISOString().split('T')[0];
+
+        const employees = await query<{
+          id: number;
+          employee_id: string;
+          name: string;
+          email: string;
+          phone: string;
+          role: string;
+          avatar: string;
+          created_at: string;
+        }>(
+          'SELECT id, employee_id, name, email, phone, role, avatar, created_at FROM employees WHERE company_id = ? ORDER BY created_at DESC',
+          [session.companyId]
+        );
+
+        // Get today's attendance for each employee
+        const attendance = await query<{
+          employee_id: number;
+          check_in: string;
+          check_out: string;
+        }>(
+          `SELECT a.employee_id, a.check_in, a.check_out 
+           FROM attendance a 
+           JOIN employees e ON a.employee_id = e.id 
+           WHERE e.company_id = ? AND a.date = ?`,
+          [session.companyId, today]
+        );
+
+        const attendanceMap = new Map(
+          attendance.map((a) => [a.employee_id, a])
+        );
+
+        const employeesWithStatus = employees.map((emp) => {
+          const att = attendanceMap.get(emp.id);
+          let status: 'present' | 'leave' | 'absent' = 'absent';
+          if (att?.check_in && !att?.check_out) {
+            status = 'present';
+          } else if (att?.check_in && att?.check_out) {
+            status = 'present';
+          }
+          return { ...emp, status };
+        });
+
+        return NextResponse.json({
+          success: true,
+          data: employeesWithStatus,
+          employees: employeesWithStatus,
+        });
+      } catch {
+        // DB not connected in local dev, fall through to in-memory store
+      }
     }
 
-    await initDatabase();
+    // Check mock/cookie session
+    const user = await getCurrentUser();
+    if (!user) {
+      return NextResponse.json({ success: false, error: 'Not authenticated' }, { status: 401 });
+    }
 
-    const today = new Date().toISOString().split('T')[0];
+    if (!canViewEmployees(user)) {
+      return NextResponse.json(
+        { success: false, error: 'Forbidden: insufficient permissions' },
+        { status: 403 }
+      );
+    }
 
-    const employees = await query<{
-      id: number;
-      employee_id: string;
-      name: string;
-      email: string;
-      phone: string;
-      role: string;
-      avatar: string;
-      created_at: string;
-    }>(
-      'SELECT id, employee_id, name, email, phone, role, avatar, created_at FROM employees WHERE company_id = ? ORDER BY created_at DESC',
-      [session.companyId]
-    );
-
-    // Get today's attendance for each employee
-    const attendance = await query<{
-      employee_id: number;
-      check_in: string;
-      check_out: string;
-    }>(
-      `SELECT a.employee_id, a.check_in, a.check_out
-       FROM attendance a
-       JOIN employees e ON a.employee_id = e.id
-       WHERE e.company_id = ? AND a.date = ?`,
-      [session.companyId, today]
-    );
-
-    const attendanceMap = new Map(
-      attendance.map((a) => [a.employee_id, a])
-    );
-
-    const employeesWithStatus = employees.map((emp) => {
-      const att = attendanceMap.get(emp.id);
-      let status: 'present' | 'leave' | 'absent' = 'absent';
-      if (att?.check_in && !att?.check_out) {
-        status = 'present';
-      } else if (att?.check_in && att?.check_out) {
-        status = 'present';
-      }
-      return { ...emp, status };
+    const employees = getAllEmployees();
+    return NextResponse.json({
+      success: true,
+      data: employees,
+      employees: employees.map((e, idx) => ({
+        id: idx + 1,
+        employee_id: e.id,
+        name: e.name,
+        email: e.email,
+        phone: e.mobile,
+        role: e.role.toLowerCase(),
+        avatar: e.avatar,
+        created_at: new Date().toISOString(),
+        status: 'present',
+      })),
     });
-
-    return NextResponse.json({ employees: employeesWithStatus });
   } catch (error) {
     console.error('Employees GET error:', error);
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+    return NextResponse.json({ success: false, error: 'Internal server error' }, { status: 500 });
   }
 }
 
@@ -115,7 +126,6 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Generate employee ID and random password
     const employeeId = await generateEmployeeId(name);
     const randomPassword = generateRandomPassword();
     const passwordHash = await bcrypt.hash(randomPassword, 10);
@@ -147,5 +157,4 @@ export async function POST(request: NextRequest) {
     }
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
->>>>>>> origin/main
 }
