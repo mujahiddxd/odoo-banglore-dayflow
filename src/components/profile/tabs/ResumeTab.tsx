@@ -108,15 +108,6 @@ export function ResumeTab({ resume, education, profileInfo }: ResumeTabProps) {
           ))}
         </div>
       </Section>
-
-      {/* Raw Resume Text (from upload) */}
-      {(profileInfo as any).resumeText && (
-        <Section title="Extracted Resume Text" icon="📑">
-          <div className="sketchy-card p-5 whitespace-pre-wrap font-body text-sm bg-[var(--uxsg-paper)] opacity-80">
-            {(profileInfo as any).resumeText}
-          </div>
-        </Section>
-      )}
     </div>
   );
 }
