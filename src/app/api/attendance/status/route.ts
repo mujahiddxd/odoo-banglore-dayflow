@@ -1,48 +1,27 @@
 import { NextResponse } from 'next/server';
-import { getSession } from '@/lib/auth';
-import { initDatabase, queryOne } from '@/lib/db';
+import { getCurrentUser } from '@/lib/auth';
+import { getAttendanceStatus } from '@/lib/data/attendance';
 
 export async function GET() {
   try {
-    const session = await getSession();
-    if (!session) {
+    const user = await getCurrentUser();
+    if (!user) {
       return NextResponse.json({ error: 'Not authenticated' }, { status: 401 });
     }
 
-    await initDatabase();
-
-    const today = new Date().toISOString().split('T')[0];
-
-    // Check for an open check-in (no check-out)
-    const openRecord = await queryOne<{ id: number; check_in: string }>(
-      'SELECT id, check_in FROM attendance WHERE employee_id = ? AND date = ? AND check_out IS NULL',
-      [session.userId, today]
-    );
-
-    if (openRecord) {
-      return NextResponse.json({
-        checkedIn: true,
-        checkedOut: false,
-        checkInTime: openRecord.check_in,
-      });
-    }
-
-    // Check if already checked in and out today
-    const closedRecord = await queryOne<{ id: number }>(
-      'SELECT id FROM attendance WHERE employee_id = ? AND date = ? AND check_out IS NOT NULL',
-      [session.userId, today]
-    );
-
-    if (closedRecord) {
-      return NextResponse.json({
-        checkedIn: false,
-        checkedOut: true,
-      });
-    }
+    // Always use authenticated user's employeeId
+    const { status, record } = getAttendanceStatus(user.employeeId);
 
     return NextResponse.json({
-      checkedIn: false,
-      checkedOut: false,
+      success: true,
+      status,
+      checkedIn: status === 'CHECKED_IN',
+      checkedOut: status === 'CHECKED_OUT',
+      checkInTime: record?.checkIn ?? null,
+      checkOutTime: record?.checkOut ?? null,
+      workingMinutes: record?.workingMinutes ?? 0,
+      breakMinutes: record?.breakMinutes ?? 0,
+      extraMinutes: record?.extraMinutes ?? 0,
     });
   } catch (error) {
     console.error('Attendance status error:', error);

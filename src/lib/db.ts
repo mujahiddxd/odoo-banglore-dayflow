@@ -93,8 +93,128 @@ export async function initDatabase(): Promise<void> {
       check_in DATETIME,
       check_out DATETIME,
       date DATE NOT NULL,
+      working_minutes INT DEFAULT 0,
+      break_minutes INT DEFAULT 0,
+      extra_minutes INT DEFAULT 0,
+      status ENUM('NOT_CHECKED_IN','CHECKED_IN','CHECKED_OUT','PRESENT','ABSENT','ON_LEAVE','HALF_DAY') DEFAULT 'NOT_CHECKED_IN',
+      ip_address VARCHAR(45),
+      network_id INT,
+      office_id INT,
+      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+      updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+      FOREIGN KEY (employee_id) REFERENCES employees(id) ON DELETE CASCADE,
+      UNIQUE KEY unique_employee_date (employee_id, date)
+    )
+  `);
+
+  await db.execute(`
+    CREATE TABLE IF NOT EXISTS offices (
+      id INT AUTO_INCREMENT PRIMARY KEY,
+      company_id INT NOT NULL,
+      name VARCHAR(255) NOT NULL,
+      address TEXT,
+      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+      FOREIGN KEY (company_id) REFERENCES companies(id) ON DELETE CASCADE
+    )
+  `);
+
+  await db.execute(`
+    CREATE TABLE IF NOT EXISTS approved_networks (
+      id INT AUTO_INCREMENT PRIMARY KEY,
+      company_id INT NOT NULL,
+      office_id INT,
+      network_name VARCHAR(255) NOT NULL,
+      ipv4 VARCHAR(45),
+      cidr VARCHAR(50),
+      ipv6 VARCHAR(45),
+      enabled BOOLEAN DEFAULT TRUE,
+      valid_from DATE,
+      valid_until DATE,
+      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+      updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+      FOREIGN KEY (company_id) REFERENCES companies(id) ON DELETE CASCADE,
+      FOREIGN KEY (office_id) REFERENCES offices(id) ON DELETE SET NULL
+    )
+  `);
+
+  await db.execute(`
+    CREATE TABLE IF NOT EXISTS attendance_audit (
+      id INT AUTO_INCREMENT PRIMARY KEY,
+      employee_id INT NOT NULL,
+      action ENUM('CHECK_IN_SUCCESS','CHECK_IN_FAILED','CHECK_OUT_SUCCESS','CHECK_OUT_FAILED','INVALID_NETWORK','ALREADY_CHECKED_IN','ALREADY_CHECKED_OUT') NOT NULL,
+      timestamp DATETIME NOT NULL,
+      ip_address VARCHAR(45),
+      network_id INT,
+      office_id INT,
+      success BOOLEAN DEFAULT FALSE,
+      failure_reason TEXT,
+      user_agent TEXT,
       created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
       FOREIGN KEY (employee_id) REFERENCES employees(id) ON DELETE CASCADE
+    )
+  `);
+
+  await db.execute(`
+    CREATE TABLE IF NOT EXISTS time_off_types (
+      id INT AUTO_INCREMENT PRIMARY KEY,
+      company_id INT NOT NULL,
+      name VARCHAR(255) NOT NULL,
+      description TEXT,
+      is_paid BOOLEAN DEFAULT TRUE,
+      allocation_required BOOLEAN DEFAULT TRUE,
+      max_allocation INT DEFAULT 30,
+      allow_negative_balance BOOLEAN DEFAULT FALSE,
+      active BOOLEAN DEFAULT TRUE,
+      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+      FOREIGN KEY (company_id) REFERENCES companies(id) ON DELETE CASCADE
+    )
+  `);
+
+  await db.execute(`
+    CREATE TABLE IF NOT EXISTS time_off_allocations (
+      id INT AUTO_INCREMENT PRIMARY KEY,
+      employee_id INT NOT NULL,
+      type_id INT NOT NULL,
+      year INT NOT NULL,
+      allocated_days DECIMAL(5,2) DEFAULT 0,
+      used_days DECIMAL(5,2) DEFAULT 0,
+      pending_days DECIMAL(5,2) DEFAULT 0,
+      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+      updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+      FOREIGN KEY (employee_id) REFERENCES employees(id) ON DELETE CASCADE,
+      FOREIGN KEY (type_id) REFERENCES time_off_types(id) ON DELETE CASCADE,
+      UNIQUE KEY unique_employee_type_year (employee_id, type_id, year)
+    )
+  `);
+
+  await db.execute(`
+    CREATE TABLE IF NOT EXISTS time_off_requests (
+      id INT AUTO_INCREMENT PRIMARY KEY,
+      employee_id INT NOT NULL,
+      type_id INT NOT NULL,
+      start_date DATE NOT NULL,
+      end_date DATE NOT NULL,
+      days DECIMAL(5,2) NOT NULL,
+      reason TEXT,
+      status ENUM('PENDING','APPROVED','REJECTED','CANCELLED') DEFAULT 'PENDING',
+      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+      updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+      FOREIGN KEY (employee_id) REFERENCES employees(id) ON DELETE CASCADE,
+      FOREIGN KEY (type_id) REFERENCES time_off_types(id) ON DELETE CASCADE
+    )
+  `);
+
+  await db.execute(`
+    CREATE TABLE IF NOT EXISTS time_off_approval_audit (
+      id INT AUTO_INCREMENT PRIMARY KEY,
+      request_id INT NOT NULL,
+      action ENUM('APPROVED','REJECTED','CANCELLED') NOT NULL,
+      performed_by INT NOT NULL,
+      timestamp DATETIME NOT NULL,
+      comment TEXT,
+      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+      FOREIGN KEY (request_id) REFERENCES time_off_requests(id) ON DELETE CASCADE,
+      FOREIGN KEY (performed_by) REFERENCES employees(id) ON DELETE CASCADE
     )
   `);
 

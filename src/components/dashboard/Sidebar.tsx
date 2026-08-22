@@ -7,6 +7,8 @@ import type { AuthUser } from "@/lib/types";
 const NAV_ITEMS = [
   { href: "/dashboard", label: "Dashboard", icon: "🏠", roles: ["ADMIN", "EMPLOYEE"] },
   { href: "/dashboard/my-profile", label: "My Profile", icon: "👤", roles: ["ADMIN", "EMPLOYEE"] },
+  { href: "/dashboard/attendance", label: "Attendance", icon: "📋", roles: ["ADMIN", "EMPLOYEE"] },
+  { href: "/dashboard/timeoff", label: "Time Off", icon: "🏖️", roles: ["ADMIN", "EMPLOYEE"] },
   { href: "/dashboard/employees", label: "Employees", icon: "👥", roles: ["ADMIN"] },
 ];
 

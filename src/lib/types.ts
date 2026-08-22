@@ -167,3 +167,167 @@ export interface AuthUser {
   firstLogin?: boolean;
   companyId?: number;
 }
+
+// ============================================================
+// Attendance Types
+// ============================================================
+
+export type AttendanceStatus =
+  | 'PRESENT'
+  | 'ABSENT'
+  | 'ON_LEAVE'
+  | 'HALF_DAY'
+  | 'NOT_CHECKED_IN'
+  | 'CHECKED_IN'
+  | 'CHECKED_OUT';
+
+export interface AttendanceRecord {
+  id: string;
+  employeeId: string;
+  date: string; // YYYY-MM-DD
+  checkIn: string | null; // ISO timestamp
+  checkOut: string | null; // ISO timestamp
+  workingMinutes: number; // total working minutes
+  breakMinutes: number; // break minutes
+  extraMinutes: number; // overtime minutes
+  status: AttendanceStatus;
+  ipAddress: string;
+  networkId: string | null;
+  officeId: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export type AttendanceAuditAction =
+  | 'CHECK_IN_SUCCESS'
+  | 'CHECK_IN_FAILED'
+  | 'CHECK_OUT_SUCCESS'
+  | 'CHECK_OUT_FAILED'
+  | 'INVALID_NETWORK'
+  | 'ALREADY_CHECKED_IN'
+  | 'ALREADY_CHECKED_OUT';
+
+export interface AttendanceAuditEntry {
+  id: string;
+  employeeId: string;
+  action: AttendanceAuditAction;
+  timestamp: string;
+  ipAddress: string;
+  networkId: string | null;
+  officeId: string | null;
+  success: boolean;
+  failureReason: string | null;
+  userAgent: string;
+}
+
+// ============================================================
+// Company Network Types
+// ============================================================
+
+export interface ApprovedNetwork {
+  id: string;
+  companyId: string;
+  officeId: string;
+  officeName: string;
+  networkName: string;
+  ipv4: string;
+  cidr: string;
+  ipv6: string;
+  enabled: boolean;
+  validFrom: string;
+  validUntil: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+// ============================================================
+// Time Off Types
+// ============================================================
+
+export interface TimeOffType {
+  id: string;
+  name: string;
+  description: string;
+  isPaid: boolean;
+  allocationRequired: boolean;
+  maxAllocation: number;
+  allowNegativeBalance: boolean;
+  active: boolean;
+  createdAt: string;
+}
+
+export type TimeOffRequestStatus =
+  | 'PENDING'
+  | 'APPROVED'
+  | 'REJECTED'
+  | 'CANCELLED';
+
+export interface TimeOffAllocation {
+  id: string;
+  employeeId: string;
+  timeOffTypeId: string;
+  timeOffTypeName: string;
+  year: number;
+  allocatedDays: number;
+  usedDays: number;
+  pendingDays: number;
+  remainingDays: number;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface TimeOffRequest {
+  id: string;
+  employeeId: string;
+  employeeName: string;
+  timeOffTypeId: string;
+  timeOffTypeName: string;
+  startDate: string; // YYYY-MM-DD
+  endDate: string; // YYYY-MM-DD
+  days: number;
+  reason: string;
+  status: TimeOffRequestStatus;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface TimeOffApprovalAudit {
+  id: string;
+  requestId: string;
+  action: 'APPROVED' | 'REJECTED' | 'CANCELLED';
+  performedBy: string;
+  performedByName: string;
+  timestamp: string;
+  comment: string;
+}
+
+// ============================================================
+// Payroll Summary Types
+// ============================================================
+
+export interface PayableDaysSummary {
+  month: number;
+  year: number;
+  calendarDays: number;
+  workingDays: number;
+  presentDays: number;
+  paidLeaveDays: number;
+  unpaidLeaveDays: number;
+  absentDays: number;
+  payableDays: number;
+  totalWorkingMinutes: number;
+  totalExtraMinutes: number;
+}
+
+// ============================================================
+// Monthly Attendance Summary
+// ============================================================
+
+export interface MonthlyAttendanceSummary {
+  daysPresent: number;
+  workingDays: number;
+  absentDays: number;
+  approvedLeave: number;
+  totalWorkingMinutes: number;
+  totalExtraMinutes: number;
+}
