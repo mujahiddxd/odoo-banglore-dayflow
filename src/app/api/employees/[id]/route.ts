@@ -1,24 +1,11 @@
-<<<<<<< HEAD
-// GET /api/auth/me — Return current authenticated user
-import { getCurrentUser } from '@/lib/auth';
-
-export async function GET() {
-  const user = await getCurrentUser();
-
-  if (!user) {
-    return Response.json(
-      { success: false, error: 'Not authenticated' },
-      { status: 401 }
-    );
-  }
-
-  return Response.json({ success: true, data: user });
-=======
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import { getSession } from '@/lib/auth';
 import { initDatabase, queryOne } from '@/lib/db';
 
-export async function GET() {
+export async function GET(
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
   try {
     const session = await getSession();
     if (!session) {
@@ -26,6 +13,11 @@ export async function GET() {
     }
 
     await initDatabase();
+
+    const { id } = await params;
+
+    // "me" returns the current user's profile
+    const employeeId = id === 'me' ? session.userId : parseInt(id, 10);
 
     const employee = await queryOne<{
       id: number;
@@ -38,12 +30,12 @@ export async function GET() {
       avatar: string;
       created_at: string;
     }>(
-      'SELECT id, employee_id, company_id, name, email, phone, role, avatar, created_at FROM employees WHERE id = ?',
-      [session.userId]
+      'SELECT id, employee_id, company_id, name, email, phone, role, avatar, created_at FROM employees WHERE id = ? AND company_id = ?',
+      [employeeId, session.companyId]
     );
 
     if (!employee) {
-      return NextResponse.json({ error: 'User not found' }, { status: 404 });
+      return NextResponse.json({ error: 'Employee not found' }, { status: 404 });
     }
 
     const company = await queryOne<{ name: string; logo: string }>(
@@ -52,15 +44,13 @@ export async function GET() {
     );
 
     return NextResponse.json({
-      user: {
+      employee: {
         ...employee,
         companyName: company?.name,
-        companyLogo: company?.logo,
       },
     });
   } catch (error) {
-    console.error('Auth me error:', error);
+    console.error('Employee GET error:', error);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
->>>>>>> origin/main
 }
