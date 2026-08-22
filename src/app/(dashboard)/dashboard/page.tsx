@@ -153,22 +153,47 @@ export default function DashboardPage() {
             </div>
             </>
             ) : (
-              <div className="flex flex-col items-center justify-center h-full min-h-[300px] sketchy-card bg-white p-8 animate-fade-in mt-2">
-                <div className="w-16 h-16 rounded-full bg-[var(--uxsg-teal)] flex items-center justify-center sketchy-border mb-4 overflow-hidden">
-                  {user?.avatar ? (
-                    <img src={user?.avatar} alt={user?.name} className="w-full h-full object-cover" />
+              <div className="flex flex-col gap-6">
+                <div className="flex flex-col items-center justify-center min-h-[300px] sketchy-card bg-white p-8 animate-fade-in mt-2">
+                  <div className="w-16 h-16 rounded-full bg-[var(--uxsg-teal)] flex items-center justify-center sketchy-border mb-4 overflow-hidden">
+                    {user?.avatar ? (
+                      <img src={user?.avatar} alt={user?.name} className="w-full h-full object-cover" />
+                    ) : (
+                      <span className="font-headline text-2xl font-bold text-[var(--uxsg-ink)]">
+                        {user?.name?.charAt(0).toUpperCase() || 'W'}
+                      </span>
+                    )}
+                  </div>
+                  <h1 className="font-headline text-3xl font-bold text-[var(--uxsg-ink)] text-center mb-2">
+                    Welcome back, {user?.name?.split(' ')[0]}!
+                  </h1>
+                  <p className="font-body text-gray-500 text-center max-w-md">
+                    You are checked in to your workspace. Use the panel on the right to manage your attendance.
+                  </p>
+                </div>
+
+                <div className="mt-4">
+                  <h2 className="font-headline text-xl font-bold text-[var(--uxsg-ink)] mb-4">Team Directory</h2>
+                  {employees.length === 0 ? (
+                    <div className="sketchy-card p-8 text-center animate-fade-in">
+                      <p className="font-headline text-md font-bold text-gray-400">No team members found</p>
+                    </div>
                   ) : (
-                    <span className="font-headline text-2xl font-bold text-[var(--uxsg-ink)]">
-                      {user?.name?.charAt(0).toUpperCase() || 'W'}
-                    </span>
+                    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+                      {employees.map((emp, i) => (
+                        <EmployeeCard
+                          key={emp.id}
+                          id={emp.employee_id}
+                          name={emp.name}
+                          avatar={emp.avatar}
+                          status={emp.status}
+                          index={i}
+                          isClickable={false}
+                        />
+                      ))}
+                    </div>
                   )}
                 </div>
-                <h1 className="font-headline text-3xl font-bold text-[var(--uxsg-ink)] text-center mb-2">
-                  Welcome back, {user?.name?.split(' ')[0]}!
-                </h1>
-                <p className="font-body text-gray-500 text-center max-w-md">
-                  You are checked in to your workspace. Use the panel on the right to manage your attendance.
-                </p>
               </div>
             )}
           </div>

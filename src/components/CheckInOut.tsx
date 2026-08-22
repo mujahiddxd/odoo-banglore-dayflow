@@ -24,6 +24,8 @@ export default function CheckInOut() {
     return () => clearInterval(interval);
   }, [status, checkInTime]);
 
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
+
   const fetchStatus = async () => {
     try {
       const res = await fetch('/api/attendance/status');
@@ -43,18 +45,23 @@ export default function CheckInOut() {
 
   const handleCheckIn = async () => {
     setLoading(true);
+    setErrorMsg(null);
     try {
       const res = await fetch('/api/attendance', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ action: 'check-in' }),
       });
+      const data = await res.json();
       if (res.ok) {
-        const data = await res.json();
         setStatus('checked-in');
         setCheckInTime(data.checkInTime);
         setElapsedSeconds(0);
+      } else {
+        setErrorMsg(data.error || 'Failed to check in');
       }
+    } catch (e) {
+      setErrorMsg('Network error. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -111,9 +118,16 @@ export default function CheckInOut() {
         </div>
       )}
 
-      {/* Buttons */}
+      {/* Error Message */}
+      {errorMsg && (
+        <div className="mb-4 p-2 bg-red-100 border border-red-400 text-red-700 text-xs font-body rounded text-center">
+          {errorMsg}
+        </div>
+      )}
+
+      {/* Buttons / Message */}
       <div className="flex flex-col gap-2">
-        {status !== 'checked-in' && (
+        {status === 'idle' && (
           <button
             onClick={handleCheckIn}
             disabled={loading}
@@ -130,6 +144,16 @@ export default function CheckInOut() {
           >
             {loading ? 'Checking out...' : 'Check Out →'}
           </button>
+        )}
+        {status === 'checked-out' && (
+          <div className="text-center p-3 border-2 border-[var(--uxsg-ink)] rounded-md bg-[var(--uxsg-yellow)] bg-opacity-20 sketchy-border">
+            <p className="font-body text-sm font-bold text-[var(--uxsg-ink)]">
+              Attendance Complete
+            </p>
+            <p className="font-body text-xs mt-1 text-gray-700">
+              Only one check-in per day is allowed.
+            </p>
+          </div>
         )}
       </div>
     </div>

@@ -9,9 +9,10 @@ interface EmployeeCardProps {
   avatar?: string;
   status: 'present' | 'leave' | 'absent';
   index?: number;
+  isClickable?: boolean;
 }
 
-export default function EmployeeCard({ id, name, avatar, status, index = 0 }: EmployeeCardProps) {
+export default function EmployeeCard({ id, name, avatar, status, index = 0, isClickable = true }: EmployeeCardProps) {
   const router = useRouter();
 
   const statusClass = {
@@ -35,12 +36,12 @@ export default function EmployeeCard({ id, name, avatar, status, index = 0 }: Em
 
   return (
     <div
-      onClick={() => router.push(`/dashboard/employees/${id}`)}
-      className={`sketchy-card p-4 cursor-pointer group animate-fade-in stagger-${index + 1}`}
+      onClick={() => isClickable && router.push(`/dashboard/employees/${id}`)}
+      className={`sketchy-card p-4 ${isClickable ? 'cursor-pointer' : ''} group animate-fade-in stagger-${index + 1}`}
       style={{ opacity: 0 }}
-      role="button"
-      tabIndex={0}
-      onKeyDown={(e) => { if (e.key === 'Enter') router.push(`/dashboard/employees/${id}`); }}
+      role={isClickable ? 'button' : 'article'}
+      tabIndex={isClickable ? 0 : undefined}
+      onKeyDown={(e) => { if (isClickable && e.key === 'Enter') router.push(`/dashboard/employees/${id}`); }}
     >
       {/* Status indicator */}
       <div className="absolute top-3 right-3 z-10" title={statusLabel}>

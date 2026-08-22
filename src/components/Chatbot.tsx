@@ -115,19 +115,17 @@ export default function Chatbot() {
           </div>
 
           {/* Quick Replies */}
-          {messages.length < 3 && (
-            <div className="px-4 pb-2 bg-white flex flex-wrap gap-2">
-              {QUICK_REPLIES.map((reply, idx) => (
-                <button
-                  key={idx}
-                  onClick={() => handleSend(reply)}
-                  className="font-body text-[10px] sm:text-xs font-semibold bg-[var(--uxsg-paper)] border border-black rounded-full px-3 py-1 hover:bg-[var(--uxsg-teal)] transition-colors text-left"
-                >
-                  {reply}
-                </button>
-              ))}
-            </div>
-          )}
+          <div className="px-4 pb-2 bg-white flex flex-wrap gap-2 pt-2 border-t border-gray-100">
+            {QUICK_REPLIES.map((reply, idx) => (
+              <button
+                key={idx}
+                onClick={() => handleSend(reply)}
+                className="font-body text-[10px] sm:text-xs font-semibold bg-[var(--uxsg-paper)] border border-black rounded-full px-3 py-1 hover:bg-[var(--uxsg-teal)] transition-colors text-left shadow-[1px_1px_0px_black] active:shadow-none active:translate-y-[1px]"
+              >
+                {reply}
+              </button>
+            ))}
+          </div>
 
           {/* Input Area */}
           <div className="p-4 bg-white border-t-2 border-black flex gap-2">

@@ -15,26 +15,12 @@ export async function GET() {
       return NextResponse.json({ success: false, error: 'Not authenticated' }, { status: 401 });
     }
 
-    if (!canViewEmployees(user)) {
-      return NextResponse.json({ success: false, error: 'Forbidden: insufficient permissions' }, { status: 403 });
-    }
+    const isAdmin = canViewEmployees(user);
 
     await initDatabase();
     const today = new Date().toISOString().split('T')[0];
 
-    const employees = await query<{
-      id: number;
-      employee_id: string;
-      name: string;
-      email: string;
-      phone: string;
-      role: string;
-      avatar: string;
-      profile_picture: string;
-      position: string;
-      department: string;
-      created_at: string;
-    }>(
+    const employees = await query<any>(
       "SELECT id, employee_id, name, email, phone, role, avatar, profile_picture, position, department, created_at FROM employees WHERE role != 'admin' ORDER BY created_at DESC"
     );
 
@@ -63,10 +49,24 @@ export async function GET() {
       } else if (att?.check_in && att?.check_out) {
         status = 'present';
       }
+      
+      const avatar = emp.profile_picture || emp.avatar || '';
+      
+      if (!isAdmin) {
+        return {
+          id: emp.id,
+          employee_id: emp.employee_id,
+          name: emp.name,
+          avatar,
+          status,
+          role: emp.role,
+        };
+      }
+      
       return { 
         ...emp, 
         status,
-        avatar: emp.profile_picture || emp.avatar || ''
+        avatar
       };
     });
 
