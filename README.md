@@ -34,3 +34,29 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+
+## Database Setup & Credentials
+
+This project connects to a local MySQL / MariaDB instance.
+
+### Prerequisites & Setup
+1. **MySQL Server**: Ensure your local MySQL server is running (e.g., via XAMPP MySQL).
+2. **Environment Variables**: Create a `.env` file in the root directory:
+   ```env
+   DB_HOST=localhost
+   DB_PORT=3306
+   DB_USER=root
+   DB_PASSWORD=
+   DB_NAME=dayflow
+   ```
+3. **Database Creation**: Ensure the `dayflow` database is created:
+   ```sql
+   CREATE DATABASE IF NOT EXISTS dayflow;
+   ```
+4. **Table Initialization**: The application will automatically create the required database tables and seed the default admin account on start.
+
+### Seeded Credentials
+Use these credentials to sign in on the `/signin` page:
+- **Email**: `admin@dayflow.in`
+- **Password**: `admin123`
+

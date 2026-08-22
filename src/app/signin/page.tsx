@@ -1,13 +1,15 @@
 'use client';
 
-import React, { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import React, { useState, Suspense } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import SketchyButton from '@/components/SketchyButton';
 import SketchyInput from '@/components/SketchyInput';
 import Link from 'next/link';
 
-export default function SignInPage() {
+function SignInForm() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const justRegistered = searchParams.get('registered') === 'true';
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -72,6 +74,18 @@ export default function SignInPage() {
               Every workday, perfectly aligned ✦
             </p>
           </div>
+
+          {/* Registration success banner */}
+          {justRegistered && (
+            <div
+              className="sticky-note sticky-note-teal p-3 text-sm mb-5 animate-fade-in"
+              style={{ transform: 'rotate(-0.3deg)' }}
+            >
+              <span className="font-handwritten">
+                🎉 Company registered! A welcome email with your login link has been sent. Sign in below.
+              </span>
+            </div>
+          )}
 
           {/* Form */}
           <form onSubmit={handleSubmit} className="space-y-5">
@@ -139,5 +153,13 @@ export default function SignInPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function SignInPage() {
+  return (
+    <Suspense>
+      <SignInForm />
+    </Suspense>
   );
 }
