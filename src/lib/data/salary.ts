@@ -55,7 +55,15 @@ const historyStore: Map<string, SalaryHistoryEntry[]> = new Map([
 // ---- Data Access Functions ----
 
 export function getSalaryConfig(employeeId: string): SalaryConfig | undefined {
-  return salaryStore.get(employeeId);
+  let config = salaryStore.get(employeeId);
+  if (!config) {
+    config = createSalaryConfig(employeeId, 50000);
+    const computed = calculateSalary(config);
+    config.components = computed.components;
+    config.yearlyWage = computed.yearlyWage;
+    salaryStore.set(employeeId, config);
+  }
+  return config;
 }
 
 export function updateSalaryConfig(
