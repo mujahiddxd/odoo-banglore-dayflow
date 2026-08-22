@@ -27,7 +27,7 @@ export function ResumeTab({ resume, education, profileInfo }: ResumeTabProps) {
       </div>
       {/* Skills */}
       {profileInfo.skills.length > 0 && (
-        <Section title="Skills" icon="🛠️">
+        <Section title="Skills">
           <div className="flex flex-wrap gap-2">
             {profileInfo.skills.map((skill) => (
               <span key={skill} className="sketchy-badge sketchy-badge-teal">
@@ -40,7 +40,7 @@ export function ResumeTab({ resume, education, profileInfo }: ResumeTabProps) {
 
       {/* Certifications */}
       {profileInfo.certifications.length > 0 && (
-        <Section title="Certifications" icon="🏅">
+        <Section title="Certifications">
           <div className="flex flex-wrap gap-2">
             {profileInfo.certifications.map((cert) => (
               <span key={cert} className="sketchy-badge sketchy-badge-yellow">
@@ -52,7 +52,7 @@ export function ResumeTab({ resume, education, profileInfo }: ResumeTabProps) {
       )}
 
       {/* Work Experience */}
-      <Section title="Work Experience" icon="💼">
+      <Section title="Work Experience">
         <div className="space-y-4">
           {resume.map((entry, i) => (
             <div
@@ -82,7 +82,7 @@ export function ResumeTab({ resume, education, profileInfo }: ResumeTabProps) {
       </Section>
 
       {/* Education */}
-      <Section title="Education" icon="🎓">
+      <Section title="Education">
         <div className="space-y-4">
           {education.map((entry, i) => (
             <div key={i} className="sketchy-card p-5 hover:transform-none">
@@ -108,23 +108,28 @@ export function ResumeTab({ resume, education, profileInfo }: ResumeTabProps) {
           ))}
         </div>
       </Section>
+      {/* Raw Resume Text (from upload) */}
+      {(profileInfo as any).resumeText && (
+        <Section title="Extracted Resume Text">
+          <div className="sketchy-card p-5 whitespace-pre-wrap font-body text-sm bg-[var(--uxsg-paper)] opacity-80">
+            {(profileInfo as any).resumeText}
+          </div>
+        </Section>
+      )}
     </div>
   );
 }
 
 function Section({
   title,
-  icon,
   children,
 }: {
   title: string;
-  icon: string;
   children: React.ReactNode;
 }) {
   return (
     <div>
-      <h3 className="font-headline text-xl font-bold mb-4">
-        <span className="mr-2">{icon}</span>
+      <h3 className="font-headline text-xl font-bold section-heading">
         {title}
       </h3>
       {children}

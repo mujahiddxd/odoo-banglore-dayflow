@@ -145,6 +145,16 @@ body {
   font-family: var(--font-body);
 }
 
+.section-heading {
+  display: inline-block;
+  background-color: var(--uxsg-yellow);
+  padding: 4px 12px;
+  border: 2px solid var(--uxsg-ink);
+  box-shadow: 2px 2px 0px var(--uxsg-ink);
+  transform: rotate(-1deg);
+  margin-bottom: 1rem;
+}
+
 .font-hand, .font-handwritten {
   font-family: var(--font-hand);
 }

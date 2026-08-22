@@ -282,10 +282,10 @@ export default function ProfilePage() {
 
         {/* Tabs */}
         <div className="border-b-2 border-black mb-8 flex overflow-x-auto">
-          <TabButton active={activeTab === 'resume'} onClick={() => setActiveTab('resume')} icon="📄">Resume</TabButton>
-          <TabButton active={activeTab === 'private'} onClick={() => setActiveTab('private')} icon="🔒">Private Info</TabButton>
-          <TabButton active={activeTab === 'salary'} onClick={() => setActiveTab('salary')} icon="💰">Salary Info</TabButton>
-          <TabButton active={activeTab === 'security'} onClick={() => setActiveTab('security')} icon="🛡️">Security</TabButton>
+          <TabButton active={activeTab === 'resume'} onClick={() => setActiveTab('resume')}>Resume</TabButton>
+          <TabButton active={activeTab === 'private'} onClick={() => setActiveTab('private')}>Private Info</TabButton>
+          <TabButton active={activeTab === 'salary'} onClick={() => setActiveTab('salary')}>Salary Info</TabButton>
+          <TabButton active={activeTab === 'security'} onClick={() => setActiveTab('security')}>Security</TabButton>
         </div>
 
         {/* Tab Content */}
@@ -294,8 +294,8 @@ export default function ProfilePage() {
             
             {/* Skills */}
             <section>
-              <h3 className="font-headline text-2xl font-bold text-gray-600 mb-4 flex items-center gap-2">
-                <span>🛠️</span> Skills
+              <h3 className="font-headline text-2xl font-bold text-[var(--uxsg-ink)] section-heading">
+                Skills
               </h3>
               <div className="flex flex-wrap gap-3">
                 {['Talent Acquisition', 'Employee Relations', 'Payroll Management', 'Performance Review', 'Compliance'].map((skill) => (
@@ -308,8 +308,8 @@ export default function ProfilePage() {
 
             {/* Certifications */}
             <section>
-              <h3 className="font-headline text-2xl font-bold text-gray-600 mb-4 flex items-center gap-2">
-                <span>🏅</span> Certifications
+              <h3 className="font-headline text-2xl font-bold text-[var(--uxsg-ink)] section-heading">
+                Certifications
               </h3>
               <div className="flex flex-wrap gap-3">
                 {['SHRM-CP', 'HR Analytics – IIM Bangalore'].map((cert) => (
@@ -322,8 +322,8 @@ export default function ProfilePage() {
 
             {/* Work Experience */}
             <section>
-              <h3 className="font-headline text-2xl font-bold text-gray-600 mb-4 flex items-center gap-2">
-                <span>💼</span> Work Experience
+              <h3 className="font-headline text-2xl font-bold text-[var(--uxsg-ink)] section-heading">
+                Work Experience
               </h3>
               <div className="sketchy-card p-6 min-h-[100px]">
                 {/* Empty block for now to match UI */}
@@ -348,7 +348,7 @@ function DetailItem({ icon, label, value }: { icon: string; label: string; value
   );
 }
 
-function TabButton({ children, active, onClick, icon }: { children: React.ReactNode; active: boolean; onClick: () => void; icon: string }) {
+function TabButton({ children, active, onClick }: { children: React.ReactNode; active: boolean; onClick: () => void }) {
   return (
     <button
       onClick={onClick}
@@ -357,7 +357,6 @@ function TabButton({ children, active, onClick, icon }: { children: React.ReactN
         ${active ? 'text-black border-b-[3px] border-black -mb-[2px]' : 'text-gray-500 hover:text-gray-700 hover:bg-black/5'}
       `}
     >
-      <span className="opacity-60">{icon}</span>
       {children}
     </button>
   );

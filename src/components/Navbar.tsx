@@ -26,18 +26,6 @@ export default function Navbar({ userName, userAvatar, companyName }: NavbarProp
 
   return (
     <nav className="w-full bg-[var(--uxsg-paper)] px-4 py-4 flex items-center gap-6 sticky top-0 z-50 border-b-2 border-[var(--uxsg-ink)] shadow-[0_4px_0_rgba(0,0,0,0.05)]">
-      {/* Company Logo / Name */}
-      <div className="flex items-center gap-3 mr-2">
-        <div className="w-10 h-10 rounded-full bg-[var(--uxsg-teal)] flex items-center justify-center sketchy-border overflow-hidden">
-          <span className="font-headline text-lg font-bold text-[var(--uxsg-ink)]">
-            {companyName ? companyName.charAt(0).toUpperCase() : 'O'}
-          </span>
-        </div>
-        <span className="font-headline text-[var(--uxsg-ink)] text-2xl hidden sm:block font-bold">
-          {companyName || 'Odoo'}
-        </span>
-      </div>
-
       {/* Nav Tabs */}
       <div className="flex items-center gap-6">
         {TABS.map((tab) => {

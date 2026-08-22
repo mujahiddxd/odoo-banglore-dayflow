@@ -139,7 +139,7 @@ export function SalaryInfoTab({
               onClick={handleEditStart}
               className="sketchy-btn sketchy-btn-yellow"
             >
-              ✏️ Edit Salary
+              Edit Salary
             </button>
           )}
         </div>
@@ -158,7 +158,7 @@ export function SalaryInfoTab({
 
       {/* Wage Section */}
       <div className="sketchy-card p-6">
-        <h3 className="font-headline text-xl font-bold mb-4">💰 Wage</h3>
+        <h3 className="font-headline text-xl font-bold section-heading">Wage</h3>
         <div className="info-grid">
           <div className="info-field">
             <span className="info-field-label">Wage Type</span>
@@ -193,8 +193,8 @@ export function SalaryInfoTab({
 
       {/* Salary Components */}
       <div className="sketchy-card p-6">
-        <h3 className="font-headline text-xl font-bold mb-4">
-          📊 Salary Components
+        <h3 className="font-headline text-xl font-bold section-heading">
+          Salary Components
         </h3>
         <p className="font-body text-xs opacity-50 mb-4">
           Components that allocate the gross monthly wage.
@@ -304,8 +304,8 @@ export function SalaryInfoTab({
 
       {/* Deductions */}
       <div className="sketchy-card p-6">
-        <h3 className="font-headline text-xl font-bold mb-4">
-          📉 Employee Deductions
+        <h3 className="font-headline text-xl font-bold section-heading">
+          Employee Deductions
         </h3>
 
         <div className="sketchy-border-wobble overflow-hidden">
@@ -398,8 +398,8 @@ export function SalaryInfoTab({
 
       {/* Employer Contributions */}
       <div className="sketchy-card p-6">
-        <h3 className="font-headline text-xl font-bold mb-4">
-          🏢 Employer Contributions
+        <h3 className="font-headline text-xl font-bold section-heading">
+          Employer Contributions
         </h3>
         <p className="font-body text-xs opacity-50 mb-4">
           These are NOT deducted from the employee&apos;s salary.
@@ -443,8 +443,8 @@ export function SalaryInfoTab({
 
       {/* Net Salary Summary */}
       <div className="sketchy-card p-6" style={{ background: "rgba(252, 221, 42, 0.08)" }}>
-        <h3 className="font-headline text-xl font-bold mb-4">
-          💵 Monthly Summary
+        <h3 className="font-headline text-xl font-bold section-heading">
+          Monthly Summary
         </h3>
         <div className="space-y-2">
           <div className="flex justify-between">
@@ -473,8 +473,8 @@ export function SalaryInfoTab({
 
       {/* Working Configuration */}
       <div className="sketchy-card p-6">
-        <h3 className="font-headline text-xl font-bold mb-4">
-          ⏰ Working Configuration
+        <h3 className="font-headline text-xl font-bold section-heading">
+          Working Configuration
         </h3>
         <div className="info-grid">
           <div className="info-field">
@@ -529,8 +529,8 @@ export function SalaryInfoTab({
       {currentUser.role === "ADMIN" && (
         <div className="sketchy-card p-6">
           <div className="flex justify-between items-center mb-4">
-            <h3 className="font-headline text-xl font-bold">
-              📜 Salary History
+            <h3 className="font-headline text-xl font-bold section-heading">
+              Salary History
             </h3>
             <button
               onClick={() => setShowHistory(!showHistory)}

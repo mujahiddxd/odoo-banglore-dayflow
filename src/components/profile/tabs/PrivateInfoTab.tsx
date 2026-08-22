@@ -70,7 +70,7 @@ export function PrivateInfoTab({
   if (isEditing) {
     return (
       <form onSubmit={handleSubmit} className="space-y-8 animate-fade-in">
-        <Section title="Personal Information" icon="👤">
+        <Section title="Personal Information">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <SketchyInput label="Residential Address" value={formData.address} onChange={e => setFormData({...formData, address: e.target.value})} />
             <SketchyInput label="Personal Email" value={formData.personal_email} onChange={e => setFormData({...formData, personal_email: e.target.value})} />
@@ -89,7 +89,7 @@ export function PrivateInfoTab({
 
         {isAdmin && (
           <>
-            <Section title="Bank Details" icon="🏦">
+            <Section title="Bank Details">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <SketchyInput label="Account Number" value={formData.bank_account} onChange={e => setFormData({...formData, bank_account: e.target.value})} />
                 <SketchyInput label="Bank Name" value={formData.bank_name} onChange={e => setFormData({...formData, bank_name: e.target.value})} />
@@ -97,7 +97,7 @@ export function PrivateInfoTab({
               </div>
             </Section>
 
-            <Section title="Company Identifiers" icon="🆔">
+            <Section title="Company Identifiers">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <SketchyInput label="PAN Number" value={formData.pan_number} onChange={e => setFormData({...formData, pan_number: e.target.value})} />
                 <SketchyInput label="UAN Number" value={formData.uan_number} onChange={e => setFormData({...formData, uan_number: e.target.value})} />
@@ -119,13 +119,13 @@ export function PrivateInfoTab({
       {canEdit && (
         <div className="absolute top-0 right-0 z-10">
           <SketchyButton variant="secondary" onClick={() => setIsEditing(true)}>
-            ✏️ Edit Details
+            Edit Details
           </SketchyButton>
         </div>
       )}
 
       {/* Personal Information */}
-      <Section title="Personal Information" icon="👤">
+      <Section title="Personal Information">
         <div className="info-grid mt-4">
           <Field label="Date of Birth" value={formatDate(privateInfo.dateOfBirth)} />
           <Field
@@ -144,7 +144,7 @@ export function PrivateInfoTab({
       </Section>
 
       {/* Bank Details */}
-      <Section title="Bank Details" icon="🏦">
+      <Section title="Bank Details">
         <div className="info-grid">
           <Field
             label="Account Number"
@@ -156,7 +156,7 @@ export function PrivateInfoTab({
       </Section>
 
       {/* Company Identifiers */}
-      <Section title="Company Identifiers" icon="🆔">
+      <Section title="Company Identifiers">
         <div className="info-grid">
           <Field label="PAN Number" value={companyIdentifiers.panNumber} />
           <Field label="UAN Number" value={companyIdentifiers.uanNumber} />
@@ -165,7 +165,7 @@ export function PrivateInfoTab({
       </Section>
 
       {/* Other Profile Information */}
-      <Section title="About" icon="📝">
+      <Section title="About">
         <div className="space-y-4">
           {profileInfo.about && (
             <div className="sketchy-card p-4">
@@ -197,17 +197,14 @@ export function PrivateInfoTab({
 
 function Section({
   title,
-  icon,
   children,
 }: {
   title: string;
-  icon: string;
   children: React.ReactNode;
 }) {
   return (
     <div className="sketchy-card p-6 relative mt-4">
-      <h3 className="font-headline text-xl font-bold mb-4">
-        <span className="mr-2">{icon}</span>
+      <h3 className="font-headline text-xl font-bold section-heading">
         {title}
       </h3>
       {children}

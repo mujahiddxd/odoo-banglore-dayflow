@@ -18,7 +18,6 @@ type TabId = "resume" | "private" | "salary" | "security";
 interface TabDef {
   id: TabId;
   label: string;
-  icon: string;
 }
 
 export function EmployeeProfile({
@@ -40,12 +39,12 @@ export function EmployeeProfile({
 
   // Build tabs list — salary only if authorized
   const tabs: TabDef[] = [
-    { id: "resume", label: "Resume", icon: "📄" },
-    { id: "private", label: "Private Info", icon: "🔒" },
+    { id: "resume", label: "Resume" },
+    { id: "private", label: "Private Info" },
     ...(canViewSalary
-      ? [{ id: "salary" as TabId, label: "Salary Info", icon: "💰" }]
+      ? [{ id: "salary" as TabId, label: "Salary Info" }]
       : []),
-    { id: "security", label: "Security", icon: "🛡️" },
+    { id: "security", label: "Security" },
   ];
 
   useEffect(() => {
@@ -139,7 +138,6 @@ export function EmployeeProfile({
             onClick={() => setActiveTab(tab.id)}
             className={`sketchy-tab ${activeTab === tab.id ? "active" : ""}`}
           >
-            <span className="mr-2">{tab.icon}</span>
             {tab.label}
           </button>
         ))}

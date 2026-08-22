@@ -9,8 +9,8 @@ export function SecurityTab({ employee, isOwnProfile }: SecurityTabProps) {
   return (
     <div className="space-y-6 animate-fade-in">
       <div className="sketchy-card p-6">
-        <h3 className="font-headline text-xl font-bold mb-4">
-          🛡️ Account Security
+        <h3 className="font-headline text-xl font-bold section-heading">
+          Account Security
         </h3>
 
         <div className="info-grid">
