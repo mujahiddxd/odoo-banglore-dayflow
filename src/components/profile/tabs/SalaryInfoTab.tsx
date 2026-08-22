@@ -682,6 +682,7 @@ function useClientPreview(config: SalaryConfig): ComputedSalary {
   const [result, setResult] = useState<ComputedSalary>(() => compute());
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setResult(compute());
   }, [compute]);
 

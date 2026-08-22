@@ -21,7 +21,7 @@ export default function PayslipsPage() {
     fetchData();
   }, []);
 
-  const fetchData = async () => {
+  async function fetchData() {
     try {
       const userRes = await fetch('/api/auth/me');
       if (userRes.ok) {

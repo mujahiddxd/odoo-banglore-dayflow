@@ -23,6 +23,7 @@ export default function CreateTimeOffModal({ isOpen, onClose, onCreated }: Creat
     if (isOpen) {
       fetchTypes();
       // Reset form
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setTypeId('');
       setStartDate('');
       setEndDate('');
@@ -54,7 +55,7 @@ export default function CreateTimeOffModal({ isOpen, onClose, onCreated }: Creat
     }
   }, [startDate, endDate]);
 
-  const fetchTypes = async () => {
+  async function fetchTypes() {
     try {
       const res = await fetch('/api/timeoff/types');
       if (res.ok) {

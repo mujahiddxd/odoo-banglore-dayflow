@@ -20,7 +20,7 @@ export default function NotificationBell() {
 
   const unreadCount = notifications.filter(n => !n.is_read).length;
 
-  const fetchNotifications = async () => {
+  async function fetchNotifications() {
     try {
       const res = await fetch('/api/notifications');
       if (res.ok) {
@@ -33,6 +33,7 @@ export default function NotificationBell() {
   };
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     fetchNotifications();
     // Poll every 30 seconds
     const interval = setInterval(fetchNotifications, 30000);

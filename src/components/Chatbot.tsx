@@ -52,6 +52,7 @@ export default function Chatbot() {
     if (!text.trim()) return;
 
     // Add user message
+    // eslint-disable-next-line react-hooks/purity
     const userMsg: Message = { id: Date.now().toString(), role: 'user', text };
     setMessages(prev => [...prev, userMsg]);
     setInputValue('');

@@ -26,7 +26,7 @@ export default function ReportsPage() {
     fetchData();
   }, []);
 
-  const fetchData = async () => {
+  async function fetchData() {
     try {
       const [userRes, reportsRes] = await Promise.all([
         fetch('/api/auth/me'),
