@@ -155,7 +155,7 @@ export async function sendCompanyRegistrationEmail(
 
   try {
     await transporter.sendMail(mailOptions);
-    console.log(\`Company registration email sent to \${to}\`);
+    console.log(`Company registration email sent to ${to}`);
   } catch (error) {
     console.error('Error sending company registration email:', error);
   }

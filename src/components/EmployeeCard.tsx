@@ -42,9 +42,21 @@ export default function EmployeeCard({ id, name, avatar, status, index = 0 }: Em
       tabIndex={0}
       onKeyDown={(e) => { if (e.key === 'Enter') router.push(`/dashboard/employees/${id}`); }}
     >
-      {/* Status dot */}
-      <div className="absolute top-3 right-3">
-        <div className={`status-dot ${statusClass}`} title={statusLabel} />
+      {/* Status indicator */}
+      <div className="absolute top-3 right-3 z-10" title={statusLabel}>
+        {status === 'present' && (
+          <div className="w-3.5 h-3.5 rounded-full bg-green-500 border-[1.5px] border-[var(--uxsg-ink)] shadow-[1.5px_1.5px_0px_var(--uxsg-ink)]" />
+        )}
+        {status === 'absent' && (
+          <div className="w-3.5 h-3.5 rounded-full bg-[var(--uxsg-yellow)] border-[1.5px] border-[var(--uxsg-ink)] shadow-[1.5px_1.5px_0px_var(--uxsg-ink)]" />
+        )}
+        {status === 'leave' && (
+          <div style={{ filter: 'drop-shadow(1.5px 1.5px 0px var(--uxsg-ink))' }}>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M17.8 19.2 16 11l3.5-3.5C21 6 21.5 4 21 3c-1-.5-3 0-4.5 1.5L13 8 4.8 6.2c-.5-.1-.9.2-1.1.6L3 8l6 5-3.5 3.5-2.5-.5-1.5 1.5 2.5 2.5 2.5 2.5 1.5-1.5-.5-2.5 3.5-3.5 5 6l1.2-.7c.4-.2.7-.6.6-1.1z"/>
+            </svg>
+          </div>
+        )}
       </div>
 
       {/* Avatar */}
