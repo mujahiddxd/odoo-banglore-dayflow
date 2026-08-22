@@ -5,6 +5,8 @@ import { canViewEmployees } from "@/lib/permissions";
 import { EmployeeDirectory } from "@/components/employees/EmployeeDirectory";
 import type { Employee } from "@/lib/types";
 
+import { AddEmployeeHeader } from "@/components/employees/AddEmployeeHeader";
+
 export default async function EmployeesPage() {
   const user = await requireAuth();
 
@@ -42,12 +44,7 @@ export default async function EmployeesPage() {
 
   return (
     <div className="animate-fade-in">
-      <div className="mb-8">
-        <h1 className="font-headline text-4xl font-bold mb-2">Employees</h1>
-        <p className="font-body text-base opacity-60">
-          Manage and view all employee profiles.
-        </p>
-      </div>
+      <AddEmployeeHeader user={user} />
 
       <EmployeeDirectory employees={employees} />
     </div>

@@ -109,8 +109,12 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Not authenticated' }, { status: 401 });
     }
 
-    if (session.role !== 'admin' && session.role !== 'hr') {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 403 });
+    const userRole = session.role?.toLowerCase();
+    const isSeedAdmin = session.email === 'admin@dayflow.in';
+    const canCreate = isSeedAdmin || (userRole === 'admin' || userRole === 'hr');
+
+    if (!canCreate) {
+      return NextResponse.json({ error: 'Forbidden: Regular employees cannot add new employees' }, { status: 403 });
     }
 
     await initDatabase();

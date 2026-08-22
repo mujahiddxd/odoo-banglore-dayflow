@@ -82,7 +82,7 @@ export function Sidebar({ user }: { user: AuthUser }) {
               {user.name}
             </p>
             <p className="font-body text-xs opacity-50 truncate">
-              {user.role === "ADMIN" ? "🔑 Admin" : "Employee"}
+              {user.role === "ADMIN" ? "🔑 Admin" : "👤 Employee"}
             </p>
           </div>
         </div>

@@ -49,7 +49,7 @@ export async function GET() {
         employeeId: employee.employee_id,
         name: employee.name,
         email: employee.email,
-        role: employee.role.toUpperCase(),
+        role: (employee.email !== 'admin@dayflow.in' && employee.role.toLowerCase() === 'admin') ? 'EMPLOYEE' : employee.role.toUpperCase(),
         avatar: employee.profile_picture || employee.avatar || '',
         position: employee.position,
         department: employee.department,

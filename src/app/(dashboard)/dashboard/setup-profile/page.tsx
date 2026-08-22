@@ -130,6 +130,9 @@ export default function SetupProfilePage() {
   const [resumeText, setResumeText] = useState('');
   const [resumeFileName, setResumeFileName] = useState('');
   
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+
   const [formData, setFormData] = useState({
     phone: '',
     date_of_birth: '',
@@ -193,6 +196,7 @@ export default function SetupProfilePage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           ...formData,
+          password,
           resume_text: resumeText,
           skills,
           education_entries,
@@ -218,15 +222,18 @@ export default function SetupProfilePage() {
         <p className="font-body text-gray-600 mb-8">Let's get your profile set up so you can start flowing.</p>
 
         {/* Step Indicator */}
-        <div className="flex gap-4 mb-8">
-          <div className={`flex-1 p-3 border-2 ${step >= 1 ? 'border-[var(--uxsg-ink)] bg-[var(--uxsg-yellow)]' : 'border-gray-300'} font-headline font-bold text-center`}>
-            1. Upload Resume
+        <div className="flex flex-col sm:flex-row gap-2 sm:gap-4 mb-8">
+          <div className={`flex-1 p-2 sm:p-3 border-2 ${step >= 1 ? 'border-[var(--uxsg-ink)] bg-[var(--uxsg-yellow)]' : 'border-gray-300'} font-headline font-bold text-center text-sm sm:text-base`}>
+            1. Security
           </div>
-          <div className={`flex-1 p-3 border-2 ${step >= 2 ? 'border-[var(--uxsg-ink)] bg-[var(--uxsg-teal)] text-white' : 'border-gray-300'} font-headline font-bold text-center`}>
-            2. Personal Details
+          <div className={`flex-1 p-2 sm:p-3 border-2 ${step >= 2 ? 'border-[var(--uxsg-ink)] bg-[var(--uxsg-teal)] text-white' : 'border-gray-300'} font-headline font-bold text-center text-sm sm:text-base`}>
+            2. Resume
           </div>
-          <div className={`flex-1 p-3 border-2 ${step >= 3 ? 'border-[var(--uxsg-ink)] bg-[var(--uxsg-ink)] text-white' : 'border-gray-300'} font-headline font-bold text-center`}>
-            3. Review & Complete
+          <div className={`flex-1 p-2 sm:p-3 border-2 ${step >= 3 ? 'border-[var(--uxsg-ink)] bg-[var(--uxsg-blue)] text-white' : 'border-gray-300'} font-headline font-bold text-center text-sm sm:text-base`}>
+            3. Details
+          </div>
+          <div className={`flex-1 p-2 sm:p-3 border-2 ${step >= 4 ? 'border-[var(--uxsg-ink)] bg-[var(--uxsg-ink)] text-white' : 'border-gray-300'} font-headline font-bold text-center text-sm sm:text-base`}>
+            4. Review
           </div>
         </div>
 
@@ -236,10 +243,60 @@ export default function SetupProfilePage() {
           </div>
         )}
 
-        {/* Step 1: Resume */}
+        {/* Step 1: Password */}
         {step === 1 && (
           <div className="space-y-6">
-            <StickyNote color="yellow" title="Why Resume?">
+            <StickyNote color="yellow" title="Security First">
+              For security reasons, you must change your auto-generated password before continuing.
+            </StickyNote>
+
+            <div className="space-y-4 max-w-md mx-auto">
+              <SketchyInput
+                label="New Password"
+                type="password"
+                placeholder="Min 6 characters"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                showPasswordToggle
+                required
+              />
+              <SketchyInput
+                label="Confirm New Password"
+                type="password"
+                placeholder="Re-enter password"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                showPasswordToggle
+                required
+              />
+            </div>
+
+            <div className="flex justify-end mt-8">
+              <SketchyButton 
+                variant="cta" 
+                onClick={() => {
+                  if (password.length < 6) {
+                    setError('Password must be at least 6 characters');
+                    return;
+                  }
+                  if (password !== confirmPassword) {
+                    setError('Passwords do not match');
+                    return;
+                  }
+                  setError('');
+                  setStep(2);
+                }}
+              >
+                Set Password & Continue
+              </SketchyButton>
+            </div>
+          </div>
+        )}
+
+        {/* Step 2: Resume */}
+        {step === 2 && (
+          <div className="space-y-6">
+            <StickyNote color="blue" title="Why Resume?">
               We extract your skills, education, and experience from your resume to automatically populate your profile!
             </StickyNote>
 
@@ -257,21 +314,24 @@ export default function SetupProfilePage() {
               <p className="font-body text-sm text-gray-500">Only PDF files are supported for auto-extraction.</p>
             </div>
 
-            <div className="flex justify-end gap-4 mt-8">
-              <SketchyButton variant="secondary" onClick={() => setStep(2)}>Skip this step</SketchyButton>
-              <SketchyButton 
-                variant="cta" 
-                onClick={() => setStep(2)}
-                disabled={loading}
-              >
-                {loading ? 'Processing...' : 'Continue to Details'}
-              </SketchyButton>
+            <div className="flex justify-between gap-4 mt-8">
+              <SketchyButton variant="secondary" onClick={() => setStep(1)}>Back</SketchyButton>
+              <div className="flex gap-4">
+                <SketchyButton variant="secondary" onClick={() => setStep(3)}>Skip</SketchyButton>
+                <SketchyButton 
+                  variant="cta" 
+                  onClick={() => setStep(3)}
+                  disabled={loading}
+                >
+                  {loading ? 'Processing...' : 'Continue'}
+                </SketchyButton>
+              </div>
             </div>
           </div>
         )}
 
-        {/* Step 2: Details */}
-        {step === 2 && (
+        {/* Step 3: Details */}
+        {step === 3 && (
           <div className="space-y-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="md:col-span-2 flex items-center gap-6 mb-4">
@@ -333,14 +393,14 @@ export default function SetupProfilePage() {
             </div>
 
             <div className="flex justify-between mt-8">
-              <SketchyButton variant="secondary" onClick={() => setStep(1)}>Back</SketchyButton>
-              <SketchyButton variant="cta" onClick={() => setStep(3)}>Review Profile</SketchyButton>
+              <SketchyButton variant="secondary" onClick={() => setStep(2)}>Back</SketchyButton>
+              <SketchyButton variant="cta" onClick={() => setStep(4)}>Review Profile</SketchyButton>
             </div>
           </div>
         )}
 
-        {/* Step 3: Review */}
-        {step === 3 && (
+        {/* Step 4: Review */}
+        {step === 4 && (
           <div className="space-y-6">
             <div className="bg-gray-50 border-2 border-[var(--uxsg-ink)] p-6">
               <h3 className="font-headline text-xl font-bold mb-4 underline">Profile Summary</h3>
@@ -362,7 +422,7 @@ export default function SetupProfilePage() {
             </div>
 
             <div className="flex justify-between mt-8">
-              <SketchyButton variant="secondary" onClick={() => setStep(2)}>Back to Edit</SketchyButton>
+              <SketchyButton variant="secondary" onClick={() => setStep(3)}>Back to Edit</SketchyButton>
               <SketchyButton variant="cta" onClick={handleSubmit} disabled={loading}>
                 {loading ? 'Saving Profile...' : 'Complete Setup 🚀'}
               </SketchyButton>

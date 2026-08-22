@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import bcrypt from 'bcryptjs';
 import { getSession } from '@/lib/auth';
 import { initDatabase, execute, queryOne } from '@/lib/db';
 
@@ -35,7 +36,7 @@ export async function POST(
 
     const body = await request.json();
     const { 
-      phone, address, date_of_birth, gender, nationality, 
+      password, phone, address, date_of_birth, gender, nationality, 
       profile_picture, resume_text, skills, education_entries, resume_entries 
     } = body;
 
@@ -48,6 +49,11 @@ export async function POST(
         values.push(value);
       }
     };
+
+    if (password) {
+      const passwordHash = await bcrypt.hash(password, 10);
+      addUpdate('password_hash', passwordHash);
+    }
 
     addUpdate('phone', phone);
     addUpdate('address', address);

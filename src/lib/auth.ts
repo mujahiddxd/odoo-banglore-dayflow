@@ -94,11 +94,17 @@ export async function getCurrentUser(): Promise<AuthUser | null> {
     );
 
     if (employee) {
+      // Only admin@dayflow.in or explicit admin accounts are ADMIN
+      const isActualAdmin = employee.email === 'admin@dayflow.in' || employee.role.toLowerCase() === 'admin';
+      const userRole = (employee.email !== 'admin@dayflow.in' && employee.role.toLowerCase() === 'admin') 
+        ? 'EMPLOYEE' 
+        : (employee.role.toUpperCase() === 'ADMIN' ? 'ADMIN' : 'EMPLOYEE');
+
       return {
         employeeId: employee.employee_id,
         name: employee.name,
         email: employee.email,
-        role: employee.role.toUpperCase() === 'ADMIN' ? 'ADMIN' : 'EMPLOYEE',
+        role: userRole,
         avatar: employee.profile_picture || employee.avatar || '',
         position: employee.position || '',
         department: employee.department || '',
@@ -111,11 +117,15 @@ export async function getCurrentUser(): Promise<AuthUser | null> {
   }
 
   // Fallback to JWT data if DB fails
+  const fallbackRole = (session.email !== 'admin@dayflow.in' && session.role.toLowerCase() === 'admin')
+    ? 'EMPLOYEE'
+    : (session.role.toUpperCase() === 'ADMIN' ? 'ADMIN' : 'EMPLOYEE');
+
   return {
     employeeId: session.employeeId,
     name: session.name,
     email: session.email,
-    role: session.role.toUpperCase() === 'ADMIN' ? 'ADMIN' : 'EMPLOYEE',
+    role: fallbackRole,
     avatar: '',
     position: '',
     department: '',
