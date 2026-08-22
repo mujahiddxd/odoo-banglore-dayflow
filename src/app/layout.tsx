@@ -7,6 +7,8 @@ export const metadata: Metadata = {
     "Every workday, perfectly aligned. Digitize and streamline core HR operations, profiles, attendance, and salary management.",
 };
 
+import GlobalLoader from "@/components/GlobalLoader";
+
 export default function RootLayout({
   children,
 }: {
@@ -14,7 +16,10 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className="h-full antialiased">
-      <body className="min-h-full flex flex-col paper-bg">{children}</body>
+      <body className="min-h-full flex flex-col paper-bg">
+        <GlobalLoader />
+        {children}
+      </body>
     </html>
   );
 }
