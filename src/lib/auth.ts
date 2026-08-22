@@ -88,8 +88,14 @@ export async function getCurrentUser(): Promise<AuthUser | null> {
       department: string;
       first_login: boolean;
       company_id: number;
+      company_name: string;
+      company_logo: string;
     }>(
-      'SELECT id, employee_id, name, email, role, avatar, profile_picture, position, department, first_login, company_id FROM employees WHERE id = ?',
+      `SELECT e.id, e.employee_id, e.name, e.email, e.role, e.avatar, e.profile_picture, e.position, e.department, e.first_login, e.company_id,
+              c.name as company_name, c.logo as company_logo
+       FROM employees e
+       LEFT JOIN companies c ON e.company_id = c.id
+       WHERE e.id = ?`,
       [session.userId]
     );
 
@@ -106,6 +112,8 @@ export async function getCurrentUser(): Promise<AuthUser | null> {
         department: employee.department || '',
         firstLogin: !!employee.first_login,
         companyId: employee.company_id,
+        companyName: employee.company_name,
+        companyLogo: employee.company_logo,
       };
     }
   } catch (err) {
@@ -125,6 +133,8 @@ export async function getCurrentUser(): Promise<AuthUser | null> {
     department: '',
     firstLogin: false,
     companyId: session.companyId,
+    companyName: 'Odoo', // fallback
+    companyLogo: '',
   };
 }
 

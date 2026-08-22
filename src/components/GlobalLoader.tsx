@@ -28,13 +28,13 @@ export default function GlobalLoader() {
         {/* Sketchy Logo Loader */}
         <div className="w-24 h-24 rounded-full bg-[var(--uxsg-teal)] flex items-center justify-center sketchy-border overflow-hidden mb-6 animate-bounce">
           <span className="font-headline text-5xl font-bold text-[var(--uxsg-ink)]">
-            O
+            D
           </span>
         </div>
         
         {/* Loading Text */}
         <h1 className="font-headline text-4xl font-bold tracking-tight text-[var(--uxsg-ink)] mb-2">
-          Odoo
+          Dayflow
         </h1>
         <p className="font-body text-sm font-semibold opacity-60 uppercase tracking-widest">
           Loading Workspace...

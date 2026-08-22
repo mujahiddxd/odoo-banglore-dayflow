@@ -32,11 +32,24 @@ export function Sidebar({ user }: { user: AuthUser }) {
     <aside className="sidebar">
       {/* Logo */}
       <div className="p-5 border-b-2" style={{ borderColor: "var(--uxsg-ink)" }}>
-        <Link href="/dashboard" className="block">
-          <h1 className="font-headline text-2xl font-bold tracking-tight">
-            Odoo
-          </h1>
-          <p className="font-body text-xs opacity-50 mt-1">HR Management</p>
+        <Link href="/dashboard" className="block text-center sm:text-left flex flex-col sm:flex-row items-center gap-3">
+          {user.companyLogo ? (
+            <img 
+              src={user.companyLogo} 
+              alt={user.companyName || "Company Logo"} 
+              className="w-10 h-10 object-contain sketchy-border rounded bg-white"
+            />
+          ) : (
+            <div className="w-10 h-10 sketchy-border flex items-center justify-center font-bold bg-[var(--uxsg-yellow)] rounded">
+              {(user.companyName || "Odoo")[0].toUpperCase()}
+            </div>
+          )}
+          <div>
+            <h1 className="font-headline text-2xl font-bold tracking-tight truncate max-w-[150px]" title={user.companyName || "Odoo"}>
+              {user.companyName || "Odoo"}
+            </h1>
+            <p className="font-body text-xs opacity-50 mt-0.5">HR Management</p>
+          </div>
         </Link>
       </div>
 

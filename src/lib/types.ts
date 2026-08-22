@@ -166,6 +166,8 @@ export interface AuthUser {
   department?: string;
   firstLogin?: boolean;
   companyId?: number;
+  companyName?: string;
+  companyLogo?: string;
 }
 
 // ============================================================

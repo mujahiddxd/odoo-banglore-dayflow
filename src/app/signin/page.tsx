@@ -62,7 +62,7 @@ function SignInForm() {
           <div className="text-center mb-8">
             <div className="inline-block sketchy-border px-6 py-2.5 bg-[var(--uxsg-paper)]">
               <span className="font-headline text-xl font-bold text-[var(--uxsg-ink)]">
-                Odoo
+                Dayflow
               </span>
             </div>
             <p className="font-handwritten text-sm text-gray-500 mt-3">

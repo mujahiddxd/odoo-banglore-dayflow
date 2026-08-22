@@ -109,7 +109,7 @@ export default function TimeOffPage() {
 
   return (
     <div className="min-h-screen bg-[var(--uxsg-paper)]">
-      <Navbar userName={user?.name || 'User'} companyName="Odoo" />
+      <Navbar userName={user?.name || 'User'} companyName={user?.companyName || "Dayflow"} />
       
       <div className="max-w-7xl mx-auto px-4 py-6">
         {/* Page Header */}
