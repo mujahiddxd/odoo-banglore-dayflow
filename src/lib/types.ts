@@ -162,4 +162,8 @@ export interface AuthUser {
   email: string;
   role: Role;
   avatar: string;
+  position?: string;
+  department?: string;
+  firstLogin?: boolean;
+  companyId?: number;
 }

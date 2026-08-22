@@ -1,4 +1,6 @@
 import type { ResumeEntry, EducationEntry, ProfileInfo } from "@/lib/types";
+import Link from "next/link";
+import SketchyButton from "@/components/SketchyButton";
 
 interface ResumeTabProps {
   resume: ResumeEntry[];
@@ -9,6 +11,20 @@ interface ResumeTabProps {
 export function ResumeTab({ resume, education, profileInfo }: ResumeTabProps) {
   return (
     <div className="space-y-8 animate-fade-in">
+      <div className="flex justify-end mb-4">
+        <Link href="/dashboard/setup-profile">
+          <SketchyButton variant="secondary" size="sm">
+            <span className="flex items-center gap-2">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                <polyline points="17 8 12 3 7 8" />
+                <line x1="12" y1="3" x2="12" y2="15" />
+              </svg>
+              Upload / Update Resume
+            </span>
+          </SketchyButton>
+        </Link>
+      </div>
       {/* Skills */}
       {profileInfo.skills.length > 0 && (
         <Section title="Skills" icon="🛠️">
@@ -92,6 +108,15 @@ export function ResumeTab({ resume, education, profileInfo }: ResumeTabProps) {
           ))}
         </div>
       </Section>
+
+      {/* Raw Resume Text (from upload) */}
+      {(profileInfo as any).resumeText && (
+        <Section title="Extracted Resume Text" icon="📑">
+          <div className="sketchy-card p-5 whitespace-pre-wrap font-body text-sm bg-[var(--uxsg-paper)] opacity-80">
+            {(profileInfo as any).resumeText}
+          </div>
+        </Section>
+      )}
     </div>
   );
 }

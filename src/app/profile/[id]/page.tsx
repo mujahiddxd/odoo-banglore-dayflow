@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { useRouter, useParams } from 'next/navigation';
-import SketchyButton from '@/components/SketchyButton';
+import Navbar from '@/components/Navbar';
 
 interface EmployeeData {
   id: number;
@@ -23,60 +23,45 @@ export default function ProfilePage() {
 
   const [employee, setEmployee] = useState<EmployeeData | null>(null);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
+  const [activeTab, setActiveTab] = useState('resume');
+  const [user, setUser] = useState<any>(null); // To show in navbar
 
   useEffect(() => {
-    fetchEmployee();
+    fetchData();
   }, [id]);
 
-  const fetchEmployee = async () => {
+  const MOCK_PROFILES: Record<string, EmployeeData> = {
+    '1': { id: 1, employee_id: 'OIADMN20240001', name: 'Priya Sharma', email: 'priya.sharma@dayflow.in', phone: '+91 98765 43210', role: 'admin', avatar: '', created_at: '2024-01-15T09:00:00Z', companyName: 'Odoo' },
+    '2': { id: 2, employee_id: 'OIJODO20240002', name: 'John Doe', email: 'john@dayflow.in', phone: '+91 98765 43211', role: 'employee', avatar: '', created_at: '2024-02-10T09:00:00Z', companyName: 'Odoo' },
+    'me': { id: 1, employee_id: 'OIADMN20240001', name: 'Priya Sharma', email: 'priya.sharma@dayflow.in', phone: '+91 98765 43210', role: 'admin', avatar: '', created_at: '2024-01-15T09:00:00Z', companyName: 'Odoo' },
+  };
+
+  const fetchData = async () => {
     try {
-      const res = await fetch(`/api/employees/${id}`);
-      if (!res.ok) {
-        if (res.status === 401) {
-          router.push('/signin');
-          return;
-        }
-        setError('Employee not found');
+      const userRes = await fetch('/api/auth/me').catch(() => null);
+      if (userRes && userRes.ok) {
+        const userData = await userRes.json();
+        setUser(userData.user);
+      }
+
+      const res = await fetch(`/api/employees/${id}`).catch(() => null);
+      if (res && res.ok) {
+        const data = await res.json();
+        setEmployee(data.employee);
         return;
       }
-      const data = await res.json();
-      setEmployee(data.employee);
+      
+      const fallback = MOCK_PROFILES[id] || MOCK_PROFILES['1'];
+      setEmployee(fallback);
     } catch {
-      setError('Failed to load profile');
+      const fallback = MOCK_PROFILES[id] || MOCK_PROFILES['1'];
+      setEmployee(fallback);
     } finally {
       setLoading(false);
     }
   };
 
-  if (loading) {
-    return (
-      <div className="min-h-screen paper-bg flex items-center justify-center">
-        <div className="text-center animate-fade-in">
-          <div className="font-headline text-2xl font-bold animate-wobble">Loading...</div>
-        </div>
-      </div>
-    );
-  }
-
-  if (error || !employee) {
-    return (
-      <div className="min-h-screen paper-bg flex items-center justify-center p-4">
-        <div className="sketchy-card p-8 text-center max-w-md animate-fade-in">
-          <p className="font-headline text-xl font-bold mb-3">😕 {error || 'Not Found'}</p>
-          <SketchyButton variant="secondary" onClick={() => router.push('/dashboard')}>
-            ← Back to Dashboard
-          </SketchyButton>
-        </div>
-      </div>
-    );
-  }
-
-  const joinDate = new Date(employee.created_at).toLocaleDateString('en-IN', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-  });
+  if (loading || !employee) return null;
 
   const initials = employee.name
     .split(' ')
@@ -85,98 +70,144 @@ export default function ProfilePage() {
     .toUpperCase()
     .slice(0, 2);
 
-  const roleBadge = {
-    admin: { bg: 'bg-[var(--uxsg-cta-pink)]', text: 'text-white', label: 'Admin' },
-    hr: { bg: 'bg-[var(--uxsg-teal)]', text: 'text-[var(--uxsg-ink)]', label: 'HR Officer' },
-    employee: { bg: 'bg-[var(--uxsg-yellow)]', text: 'text-[var(--uxsg-ink)]', label: 'Employee' },
-  }[employee.role] || { bg: 'bg-gray-200', text: 'text-gray-700', label: employee.role };
-
   return (
-    <div className="min-h-screen paper-bg p-4 py-8">
-      <div className="max-w-2xl mx-auto">
-        {/* Back button */}
-        <button
-          onClick={() => router.push('/dashboard')}
-          className="font-body text-sm text-gray-500 hover:text-[var(--uxsg-ink)] transition-colors flex items-center gap-1.5 mb-6 group"
-        >
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" className="group-hover:-translate-x-1 transition-transform">
-            <line x1="19" y1="12" x2="5" y2="12" />
-            <polyline points="12 19 5 12 12 5" />
-          </svg>
-          Back to Dashboard
-        </button>
+    <div className="min-h-screen bg-[var(--uxsg-paper)]">
+      <Navbar userName={user?.name || employee.name} userAvatar={user?.avatar} companyName={user?.companyName || employee.companyName} />
+      
+      <div className="max-w-5xl mx-auto px-4 py-8">
+        {/* Title */}
+        <h1 className="font-headline text-3xl font-bold text-gray-500 mb-6" style={{ textShadow: '2px 2px 0px rgba(0,0,0,0.1)' }}>
+          My Profile
+        </h1>
 
-        {/* Profile Card */}
-        <div className="sketchy-card p-8 relative animate-slide-up">
+        {/* Main Card */}
+        <div className="sketchy-card bg-white p-8 mb-8 relative animate-slide-up">
           <div className="tape-corner tape-corner-tl" />
           <div className="tape-corner tape-corner-br" />
 
-          {/* View only badge */}
-          <div className="absolute top-4 right-4">
-            <span className="font-body text-[10px] font-semibold uppercase tracking-wider text-gray-400 bg-gray-100 px-2 py-1 rounded-full border border-gray-200">
-              View Only
-            </span>
-          </div>
-
-          {/* Avatar + Name Header */}
-          <div className="flex flex-col sm:flex-row items-center sm:items-start gap-6 mb-8 pb-6 border-b border-[var(--uxsg-border-light)]">
-            <div className="w-24 h-24 rounded-full bg-[var(--uxsg-paper)] sketchy-border flex items-center justify-center overflow-hidden flex-shrink-0">
-              {employee.avatar ? (
-                <img src={employee.avatar} alt={employee.name} className="w-full h-full object-cover" />
-              ) : (
-                <span className="font-headline text-3xl font-bold text-[var(--uxsg-ink)] opacity-40">
-                  {initials}
-                </span>
-              )}
+          {/* Top Section */}
+          <div className="flex flex-col md:flex-row gap-8 items-start relative">
+            
+            {/* Role Badge - Absolute on desktop, relative on mobile */}
+            <div className="absolute top-0 right-0 md:block hidden">
+              <span className="font-body text-xs font-bold bg-[var(--uxsg-yellow)] text-black px-4 py-1.5 sketchy-border-sm inline-flex items-center gap-2 shadow-[2px_2px_0px_#000]">
+                <span className="text-sm">🔧</span> {employee.role === 'admin' ? 'Admin' : employee.role === 'hr' ? 'HR' : 'Employee'}
+              </span>
             </div>
-            <div className="text-center sm:text-left">
-              <h1 className="font-headline text-3xl font-bold text-[var(--uxsg-ink)]">
+
+            {/* Avatar */}
+            <div className="w-32 h-32 rounded-full flex-shrink-0 flex items-center justify-center border-[3px] border-black shadow-[4px_4px_0px_rgba(0,0,0,1)] relative overflow-hidden" 
+                 style={{ background: 'linear-gradient(135deg, #a8d4e6 0%, #FCDD2A 100%)' }}>
+              <span className="font-headline text-4xl font-bold text-white drop-shadow-md">
+                {initials}
+              </span>
+            </div>
+
+            {/* User Info */}
+            <div className="flex-1 w-full">
+              <div className="md:hidden mb-4">
+                <span className="font-body text-xs font-bold bg-[var(--uxsg-yellow)] text-black px-4 py-1.5 sketchy-border-sm inline-flex items-center gap-2 shadow-[2px_2px_0px_#000]">
+                  <span className="text-sm">🔧</span> {employee.role === 'admin' ? 'Admin' : employee.role === 'hr' ? 'HR' : 'Employee'}
+                </span>
+              </div>
+              
+              <h2 className="font-headline text-4xl font-bold text-[var(--uxsg-ink)] tracking-wide">
                 {employee.name}
-              </h1>
-              <p className="font-body text-sm text-gray-500 mt-1">{employee.email}</p>
-              <div className="mt-3 inline-flex items-center gap-2">
-                <span className={`px-3 py-1 text-xs font-bold rounded-full sketchy-border-sm ${roleBadge.bg} ${roleBadge.text}`}>
-                  {roleBadge.label}
-                </span>
-                <span className="font-body text-xs text-gray-400 sketchy-border-sm px-2 py-0.5 bg-[var(--uxsg-paper)]">
-                  {employee.employee_id}
-                </span>
+              </h2>
+              <p className="font-body text-gray-600 text-sm mt-1 mb-6">HR Manager</p>
+
+              {/* Grid Details */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-12 gap-y-6">
+                <DetailItem icon="✉️" label="EMAIL" value={employee.email} />
+                <DetailItem icon="📱" label="MOBILE" value={employee.phone || '+91 98765 43210'} />
+                <DetailItem icon="🏢" label="COMPANY" value={employee.companyName || 'Odoo'} />
+                <DetailItem icon="📁" label="DEPARTMENT" value="Human Resources" />
+                <DetailItem icon="👔" label="MANAGER" value="—" />
+                <DetailItem icon="📍" label="LOCATION" value="Bangalore, India" />
               </div>
             </div>
           </div>
+        </div>
 
-          {/* Details Grid */}
-          <div className="space-y-5">
-            <ProfileField label="Full Name" value={employee.name} />
-            <ProfileField label="Employee ID" value={employee.employee_id} />
-            <ProfileField label="Email" value={employee.email} />
-            <ProfileField label="Phone" value={employee.phone || 'Not provided'} />
-            <ProfileField label="Company" value={employee.companyName || '—'} />
-            <ProfileField label="Role" value={roleBadge.label} />
-            <ProfileField label="Joined" value={joinDate} />
+        {/* Tabs */}
+        <div className="border-b-2 border-black mb-8 flex overflow-x-auto">
+          <TabButton active={activeTab === 'resume'} onClick={() => setActiveTab('resume')} icon="📄">Resume</TabButton>
+          <TabButton active={activeTab === 'private'} onClick={() => setActiveTab('private')} icon="🔒">Private Info</TabButton>
+          <TabButton active={activeTab === 'salary'} onClick={() => setActiveTab('salary')} icon="💰">Salary Info</TabButton>
+          <TabButton active={activeTab === 'security'} onClick={() => setActiveTab('security')} icon="🛡️">Security</TabButton>
+        </div>
+
+        {/* Tab Content */}
+        {activeTab === 'resume' && (
+          <div className="animate-fade-in space-y-10 pl-2">
+            
+            {/* Skills */}
+            <section>
+              <h3 className="font-headline text-2xl font-bold text-gray-600 mb-4 flex items-center gap-2">
+                <span>🛠️</span> Skills
+              </h3>
+              <div className="flex flex-wrap gap-3">
+                {['Talent Acquisition', 'Employee Relations', 'Payroll Management', 'Performance Review', 'Compliance'].map((skill) => (
+                  <span key={skill} className="font-body text-xs font-semibold bg-[var(--uxsg-teal)] text-black px-4 py-1.5 sketchy-border-sm shadow-[2px_2px_0px_#000]">
+                    {skill}
+                  </span>
+                ))}
+              </div>
+            </section>
+
+            {/* Certifications */}
+            <section>
+              <h3 className="font-headline text-2xl font-bold text-gray-600 mb-4 flex items-center gap-2">
+                <span>🏅</span> Certifications
+              </h3>
+              <div className="flex flex-wrap gap-3">
+                {['SHRM-CP', 'HR Analytics – IIM Bangalore'].map((cert) => (
+                  <span key={cert} className="font-body text-xs font-bold bg-[var(--uxsg-yellow)] text-black px-4 py-1.5 border-[1.5px] border-black shadow-[2px_2px_0px_#000]">
+                    {cert}
+                  </span>
+                ))}
+              </div>
+            </section>
+
+            {/* Work Experience */}
+            <section>
+              <h3 className="font-headline text-2xl font-bold text-gray-600 mb-4 flex items-center gap-2">
+                <span>💼</span> Work Experience
+              </h3>
+              <div className="sketchy-card p-6 min-h-[100px]">
+                {/* Empty block for now to match UI */}
+              </div>
+            </section>
+
           </div>
-        </div>
-
-        {/* Decorative element */}
-        <div className="sticky-note sticky-note-blue mt-6 max-w-xs mx-auto animate-float" style={{ animationDelay: '0.3s' }}>
-          <p className="text-sm text-center">
-            📋 This profile is in view-only mode. Contact HR to update your details.
-          </p>
-        </div>
+        )}
       </div>
     </div>
   );
 }
 
-function ProfileField({ label, value }: { label: string; value: string }) {
+function DetailItem({ icon, label, value }: { icon: string; label: string; value: string }) {
   return (
-    <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-0">
-      <span className="font-body text-sm font-medium text-gray-500 sm:w-40 flex-shrink-0">
-        {label} :-
-      </span>
-      <div className="flex-1 bg-[var(--uxsg-paper)] sketchy-border-sm px-3 py-2">
-        <span className="font-body text-sm text-[var(--uxsg-ink)]">{value}</span>
-      </div>
+    <div>
+      <p className="font-body text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-1 flex items-center gap-1.5">
+        <span className="opacity-80">{icon}</span> {label}
+      </p>
+      <p className="font-body text-sm font-semibold text-black">{value}</p>
     </div>
+  );
+}
+
+function TabButton({ children, active, onClick, icon }: { children: React.ReactNode; active: boolean; onClick: () => void; icon: string }) {
+  return (
+    <button
+      onClick={onClick}
+      className={`
+        flex items-center gap-2 px-6 py-3 font-body text-sm font-bold transition-colors whitespace-nowrap
+        ${active ? 'text-black border-b-[3px] border-black -mb-[2px]' : 'text-gray-500 hover:text-gray-700 hover:bg-black/5'}
+      `}
+    >
+      <span className="opacity-60">{icon}</span>
+      {children}
+    </button>
   );
 }

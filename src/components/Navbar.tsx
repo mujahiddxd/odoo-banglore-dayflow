@@ -22,23 +22,21 @@ export default function Navbar({ userName, userAvatar, companyName }: NavbarProp
   const [search, setSearch] = useState('');
 
   return (
-    <nav className="w-full bg-[var(--uxsg-ink)] px-4 py-3 flex items-center gap-4 sticky top-0 z-50"
-      style={{ borderBottom: '2px solid rgba(255,255,255,0.1)' }}
-    >
+    <nav className="w-full bg-[var(--uxsg-paper)] px-4 py-4 flex items-center gap-6 sticky top-0 z-50 border-b-2 border-[var(--uxsg-ink)] shadow-[0_4px_0_rgba(0,0,0,0.05)]">
       {/* Company Logo / Name */}
       <div className="flex items-center gap-3 mr-2">
-        <div className="w-9 h-9 rounded-full bg-[var(--uxsg-teal)] flex items-center justify-center sketchy-border-white overflow-hidden">
-          <span className="font-headline text-sm font-bold text-[var(--uxsg-ink)]">
-            {companyName ? companyName.charAt(0).toUpperCase() : 'D'}
+        <div className="w-10 h-10 rounded-full bg-[var(--uxsg-teal)] flex items-center justify-center sketchy-border overflow-hidden">
+          <span className="font-headline text-lg font-bold text-[var(--uxsg-ink)]">
+            {companyName ? companyName.charAt(0).toUpperCase() : 'O'}
           </span>
         </div>
-        <span className="font-headline text-white text-lg hidden sm:block">
-          {companyName || 'DayFlow'}
+        <span className="font-headline text-[var(--uxsg-ink)] text-2xl hidden sm:block font-bold">
+          {companyName || 'Odoo'}
         </span>
       </div>
 
       {/* Nav Tabs */}
-      <div className="flex items-center gap-1">
+      <div className="flex items-center gap-6">
         {TABS.map((tab) => {
           const isActive = pathname === tab.href || 
             (tab.href !== '/dashboard' && pathname?.startsWith(tab.href));
@@ -50,7 +48,7 @@ export default function Navbar({ userName, userAvatar, companyName }: NavbarProp
             <button
               key={tab.href}
               onClick={() => router.push(tab.href)}
-              className={`nav-tab ${(isActive || isEmployeesActive) ? 'nav-tab-active' : ''}`}
+              className={`font-body text-sm font-bold transition-all hover:-translate-y-0.5 ${(isActive || isEmployeesActive) ? 'text-[var(--uxsg-ink)] wavy-underline-yellow text-base' : 'text-gray-500 hover:text-[var(--uxsg-ink)]'}`}
             >
               {tab.label}
             </button>
@@ -62,9 +60,9 @@ export default function Navbar({ userName, userAvatar, companyName }: NavbarProp
       <div className="flex-1 max-w-xs ml-auto mr-4">
         <div className="relative">
           <svg
-            className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
+            className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500"
             width="16" height="16" viewBox="0 0 24 24" fill="none"
-            stroke="currentColor" strokeWidth="2" strokeLinecap="round"
+            stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"
           >
             <circle cx="11" cy="11" r="8" />
             <line x1="21" y1="21" x2="16.65" y2="16.65" />
@@ -74,7 +72,7 @@ export default function Navbar({ userName, userAvatar, companyName }: NavbarProp
             placeholder="Search..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full pl-9 pr-4 py-2 text-sm bg-white/10 border border-white/20 rounded-full text-white placeholder-gray-400 focus:outline-none focus:border-[var(--uxsg-teal)] focus:bg-white/15 transition-colors"
+            className="w-full pl-9 pr-4 py-2 text-sm bg-white border-2 border-[var(--uxsg-ink)] rounded-[255px_15px_225px_15px/15px_225px_15px_255px] text-[var(--uxsg-ink)] placeholder-gray-400 focus:outline-none focus:shadow-[2px_2px_0px_var(--uxsg-teal)] transition-all"
           />
         </div>
       </div>

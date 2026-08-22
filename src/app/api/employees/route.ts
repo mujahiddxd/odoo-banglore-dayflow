@@ -3,98 +3,97 @@ import bcrypt from 'bcryptjs';
 import { getSession, getCurrentUser } from '@/lib/auth';
 import { initDatabase, query, execute } from '@/lib/db';
 import { generateEmployeeId, generateRandomPassword } from '@/lib/employee-id';
-import { getAllEmployees } from '@/lib/data/employees';
+
 import { canViewEmployees } from '@/lib/permissions';
 
-// GET — List all employees (Admin/HR only or company members)
+// GET — List all employees (Admin/HR only)
 export async function GET() {
   try {
     const session = await getSession();
-    if (session) {
-      try {
-        await initDatabase();
-        const today = new Date().toISOString().split('T')[0];
-
-        const employees = await query<{
-          id: number;
-          employee_id: string;
-          name: string;
-          email: string;
-          phone: string;
-          role: string;
-          avatar: string;
-          created_at: string;
-        }>(
-          'SELECT id, employee_id, name, email, phone, role, avatar, created_at FROM employees WHERE company_id = ? ORDER BY created_at DESC',
-          [session.companyId]
-        );
-
-        // Get today's attendance for each employee
-        const attendance = await query<{
-          employee_id: number;
-          check_in: string;
-          check_out: string;
-        }>(
-          `SELECT a.employee_id, a.check_in, a.check_out 
-           FROM attendance a 
-           JOIN employees e ON a.employee_id = e.id 
-           WHERE e.company_id = ? AND a.date = ?`,
-          [session.companyId, today]
-        );
-
-        const attendanceMap = new Map(
-          attendance.map((a) => [a.employee_id, a])
-        );
-
-        const employeesWithStatus = employees.map((emp) => {
-          const att = attendanceMap.get(emp.id);
-          let status: 'present' | 'leave' | 'absent' = 'absent';
-          if (att?.check_in && !att?.check_out) {
-            status = 'present';
-          } else if (att?.check_in && att?.check_out) {
-            status = 'present';
-          }
-          return { ...emp, status };
-        });
-
-        return NextResponse.json({
-          success: true,
-          data: employeesWithStatus,
-          employees: employeesWithStatus,
-        });
-      } catch {
-        // DB not connected in local dev, fall through to in-memory store
-      }
-    }
-
-    // Check mock/cookie session
-    const user = await getCurrentUser();
-    if (!user) {
+    if (!session) {
       return NextResponse.json({ success: false, error: 'Not authenticated' }, { status: 401 });
     }
 
-    if (!canViewEmployees(user)) {
-      return NextResponse.json(
-        { success: false, error: 'Forbidden: insufficient permissions' },
-        { status: 403 }
+    if (session.role !== 'admin' && session.role !== 'hr' && session.role !== 'employee') {
+      return NextResponse.json({ success: false, error: 'Forbidden: insufficient permissions' }, { status: 403 });
+    }
+
+    await initDatabase();
+    const today = new Date().toISOString().split('T')[0];
+
+    let employees;
+    if (session.role === 'admin' || session.role === 'hr') {
+      employees = await query<{
+        id: number;
+        employee_id: string;
+        name: string;
+        email: string;
+        phone: string;
+        role: string;
+        avatar: string;
+        profile_picture: string;
+        position: string;
+        department: string;
+        created_at: string;
+      }>(
+        'SELECT id, employee_id, name, email, phone, role, avatar, profile_picture, position, department, created_at FROM employees WHERE company_id = ? ORDER BY created_at DESC',
+        [session.companyId]
+      );
+    } else {
+      employees = await query<{
+        id: number;
+        employee_id: string;
+        name: string;
+        email: string;
+        phone: string;
+        role: string;
+        avatar: string;
+        profile_picture: string;
+        position: string;
+        department: string;
+        created_at: string;
+      }>(
+        "SELECT id, employee_id, name, email, phone, role, avatar, profile_picture, position, department, created_at FROM employees WHERE company_id = ? AND role != 'admin' ORDER BY created_at DESC",
+        [session.companyId]
       );
     }
 
-    const employees = getAllEmployees();
+    // Get today's attendance for each employee
+    const attendance = await query<{
+      employee_id: number;
+      check_in: string;
+      check_out: string;
+    }>(
+      `SELECT a.employee_id, a.check_in, a.check_out 
+       FROM attendance a 
+       JOIN employees e ON a.employee_id = e.id 
+       WHERE e.company_id = ? AND a.date = ?`,
+      [session.companyId, today]
+    );
+
+    const attendanceMap = new Map(
+      attendance.map((a) => [a.employee_id, a])
+    );
+
+    const employeesWithStatus = employees.map((emp) => {
+      const att = attendanceMap.get(emp.id);
+      let status: 'present' | 'leave' | 'absent' = 'absent';
+      if (att?.check_in && !att?.check_out) {
+        status = 'present';
+      } else if (att?.check_in && att?.check_out) {
+        status = 'present';
+      }
+      return { 
+        ...emp, 
+        status,
+        avatar: emp.profile_picture || emp.avatar || ''
+      };
+    });
+
     return NextResponse.json({
       success: true,
-      data: employees,
-      employees: employees.map((e, idx) => ({
-        id: idx + 1,
-        employee_id: e.id,
-        name: e.name,
-        email: e.email,
-        phone: e.mobile,
-        role: e.role.toLowerCase(),
-        avatar: e.avatar,
-        created_at: new Date().toISOString(),
-        status: 'present',
-      })),
+      data: employeesWithStatus,
+      employees: employeesWithStatus,
     });
   } catch (error) {
     console.error('Employees GET error:', error);
@@ -117,7 +116,7 @@ export async function POST(request: NextRequest) {
     await initDatabase();
 
     const body = await request.json();
-    const { name, email, phone, role = 'employee' } = body;
+    const { name, email, phone, role = 'employee', position = '', department = '' } = body;
 
     if (!name || !email) {
       return NextResponse.json(
@@ -131,8 +130,8 @@ export async function POST(request: NextRequest) {
     const passwordHash = await bcrypt.hash(randomPassword, 10);
 
     const result = await execute(
-      'INSERT INTO employees (employee_id, company_id, name, email, phone, password_hash, role) VALUES (?, ?, ?, ?, ?, ?, ?)',
-      [employeeId, session.companyId, name, email, phone || null, passwordHash, role]
+      'INSERT INTO employees (employee_id, company_id, name, email, phone, password_hash, role, position, department, first_login) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+      [employeeId, session.companyId, name, email, phone || null, passwordHash, role, position, department, true]
     );
 
     return NextResponse.json({
@@ -143,6 +142,8 @@ export async function POST(request: NextRequest) {
         name,
         email,
         role,
+        position,
+        department
       },
       generatedPassword: randomPassword,
       generatedId: employeeId,

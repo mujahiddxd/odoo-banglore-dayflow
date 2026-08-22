@@ -1,29 +1,132 @@
-import type {
-  PrivateInfo,
-  BankDetails,
-  CompanyIdentifiers,
-  ProfileInfo,
-} from "@/lib/types";
+'use client';
+
+import { useState } from 'react';
+import type { PrivateInfo, BankDetails, CompanyIdentifiers, ProfileInfo } from "@/lib/types";
+import SketchyButton from '@/components/SketchyButton';
+import SketchyInput from '@/components/SketchyInput';
+import { useRouter } from 'next/navigation';
 
 interface PrivateInfoTabProps {
+  employeeId?: string;
   privateInfo: PrivateInfo;
   bankDetails: BankDetails;
   companyIdentifiers: CompanyIdentifiers;
   profileInfo: ProfileInfo;
   canEdit: boolean;
+  isAdmin?: boolean;
 }
 
 export function PrivateInfoTab({
+  employeeId = 'me',
   privateInfo,
   bankDetails,
   companyIdentifiers,
   profileInfo,
+  canEdit,
+  isAdmin = false,
 }: PrivateInfoTabProps) {
+  const router = useRouter();
+  const [isEditing, setIsEditing] = useState(false);
+  const [loading, setLoading] = useState(false);
+  
+  // Local state for editing
+  const [formData, setFormData] = useState({
+    date_of_birth: privateInfo.dateOfBirth,
+    address: privateInfo.residentialAddress,
+    nationality: privateInfo.nationality,
+    personal_email: privateInfo.personalEmail,
+    gender: privateInfo.gender,
+    marital_status: privateInfo.maritalStatus,
+    date_of_joining: privateInfo.dateOfJoining,
+    bank_name: bankDetails.bankName,
+    bank_account: bankDetails.accountNumber,
+    ifsc_code: bankDetails.ifscCode,
+    pan_number: companyIdentifiers.panNumber,
+    uan_number: companyIdentifiers.uanNumber,
+    about: profileInfo.about,
+    phone: '', // Pass via employee object normally, let's keep it simple
+  });
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+    try {
+      const res = await fetch(`/api/employees/${employeeId}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData),
+      });
+      if (!res.ok) throw new Error('Failed to update profile');
+      setIsEditing(false);
+      router.refresh();
+    } catch (err) {
+      console.error(err);
+      alert('Error updating profile');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (isEditing) {
+    return (
+      <form onSubmit={handleSubmit} className="space-y-8 animate-fade-in">
+        <Section title="Personal Information" icon="👤">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <SketchyInput label="Residential Address" value={formData.address} onChange={e => setFormData({...formData, address: e.target.value})} />
+            <SketchyInput label="Personal Email" value={formData.personal_email} onChange={e => setFormData({...formData, personal_email: e.target.value})} />
+            
+            {isAdmin && (
+              <>
+                <SketchyInput type="date" label="Date of Birth" value={formData.date_of_birth} onChange={e => setFormData({...formData, date_of_birth: e.target.value})} />
+                <SketchyInput label="Nationality" value={formData.nationality} onChange={e => setFormData({...formData, nationality: e.target.value})} />
+                <SketchyInput label="Gender" value={formData.gender} onChange={e => setFormData({...formData, gender: e.target.value})} />
+                <SketchyInput label="Marital Status" value={formData.marital_status} onChange={e => setFormData({...formData, marital_status: e.target.value})} />
+                <SketchyInput type="date" label="Date of Joining" value={formData.date_of_joining} onChange={e => setFormData({...formData, date_of_joining: e.target.value})} />
+              </>
+            )}
+          </div>
+        </Section>
+
+        {isAdmin && (
+          <>
+            <Section title="Bank Details" icon="🏦">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <SketchyInput label="Account Number" value={formData.bank_account} onChange={e => setFormData({...formData, bank_account: e.target.value})} />
+                <SketchyInput label="Bank Name" value={formData.bank_name} onChange={e => setFormData({...formData, bank_name: e.target.value})} />
+                <SketchyInput label="IFSC Code" value={formData.ifsc_code} onChange={e => setFormData({...formData, ifsc_code: e.target.value})} />
+              </div>
+            </Section>
+
+            <Section title="Company Identifiers" icon="🆔">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <SketchyInput label="PAN Number" value={formData.pan_number} onChange={e => setFormData({...formData, pan_number: e.target.value})} />
+                <SketchyInput label="UAN Number" value={formData.uan_number} onChange={e => setFormData({...formData, uan_number: e.target.value})} />
+              </div>
+            </Section>
+          </>
+        )}
+
+        <div className="flex gap-4 mt-6">
+          <SketchyButton type="submit" variant="cta" disabled={loading}>{loading ? 'Saving...' : 'Save Changes'}</SketchyButton>
+          <SketchyButton type="button" variant="secondary" onClick={() => setIsEditing(false)}>Cancel</SketchyButton>
+        </div>
+      </form>
+    );
+  }
+
   return (
-    <div className="space-y-8 animate-fade-in">
+    <div className="space-y-8 animate-fade-in relative">
+      {canEdit && (
+        <div className="absolute top-0 right-0 z-10">
+          <SketchyButton variant="secondary" onClick={() => setIsEditing(true)}>
+            ✏️ Edit Details
+          </SketchyButton>
+        </div>
+      )}
+
       {/* Personal Information */}
       <Section title="Personal Information" icon="👤">
-        <div className="info-grid">
+        <div className="info-grid mt-4">
           <Field label="Date of Birth" value={formatDate(privateInfo.dateOfBirth)} />
           <Field
             label="Residential Address"
@@ -102,7 +205,7 @@ function Section({
   children: React.ReactNode;
 }) {
   return (
-    <div className="sketchy-card p-6">
+    <div className="sketchy-card p-6 relative mt-4">
       <h3 className="font-headline text-xl font-bold mb-4">
         <span className="mr-2">{icon}</span>
         {title}

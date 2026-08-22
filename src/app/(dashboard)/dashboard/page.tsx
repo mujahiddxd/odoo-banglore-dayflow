@@ -105,7 +105,7 @@ export default function DashboardPage() {
     return (
       <div className="min-h-screen paper-bg flex items-center justify-center">
         <div className="text-center animate-fade-in">
-          <div className="font-headline text-3xl font-bold mb-2 animate-wobble">DayFlow</div>
+          <div className="font-headline text-3xl font-bold mb-2 animate-wobble">Odoo</div>
           <p className="font-handwritten text-gray-500">Loading your workspace...</p>
         </div>
       </div>

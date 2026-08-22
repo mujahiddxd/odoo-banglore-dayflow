@@ -32,7 +32,11 @@ export default function SignInPage() {
         return;
       }
 
-      router.push('/dashboard');
+      if (data.user?.firstLogin) {
+        router.push('/dashboard/setup-profile');
+      } else {
+        router.push('/dashboard');
+      }
     } catch {
       setError('Network error. Please try again.');
     } finally {
@@ -61,7 +65,7 @@ export default function SignInPage() {
           <div className="text-center mb-8">
             <div className="inline-block sketchy-border px-6 py-2.5 bg-[var(--uxsg-paper)]">
               <span className="font-headline text-xl font-bold text-[var(--uxsg-ink)]">
-                DayFlow
+                Odoo
               </span>
             </div>
             <p className="font-handwritten text-sm text-gray-500 mt-3">

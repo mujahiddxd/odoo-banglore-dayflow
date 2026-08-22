@@ -2,14 +2,13 @@ import { SignJWT, jwtVerify } from 'jose';
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 import type { AuthUser } from './types';
-import { getEmployee } from './data/employees';
+import { initDatabase, queryOne } from './db';
 
 const JWT_SECRET = new TextEncoder().encode(
   process.env.JWT_SECRET || 'dayflow-super-secret-key-change-in-production-2024'
 );
 
 const COOKIE_NAME = 'dayflow-session';
-const SESSION_COOKIE = 'dayflow_session';
 
 export interface SessionPayload {
   userId: number;
@@ -69,74 +68,74 @@ export function getLogoutCookieOptions() {
 }
 
 /**
- * Get the currently authenticated user from either mock session or JWT session.
+ * Get the currently authenticated user from JWT session + MySQL.
  */
 export async function getCurrentUser(): Promise<AuthUser | null> {
-  const cookieStore = await cookies();
-  
-  // 1. Check quick mock session cookie
-  const sessionCookie = cookieStore.get(SESSION_COOKIE);
-  if (sessionCookie?.value) {
-    const employee = getEmployee(sessionCookie.value);
+  const session = await getSession();
+  if (!session) return null;
+
+  try {
+    await initDatabase();
+    const employee = await queryOne<{
+      id: number;
+      employee_id: string;
+      name: string;
+      email: string;
+      role: string;
+      avatar: string;
+      profile_picture: string;
+      position: string;
+      department: string;
+      first_login: boolean;
+      company_id: number;
+    }>(
+      'SELECT id, employee_id, name, email, role, avatar, profile_picture, position, department, first_login, company_id FROM employees WHERE id = ?',
+      [session.userId]
+    );
+
     if (employee) {
       return {
-        employeeId: employee.id,
+        employeeId: employee.employee_id,
         name: employee.name,
         email: employee.email,
-        role: employee.role,
-        avatar: employee.avatar,
+        role: employee.role.toUpperCase() === 'ADMIN' ? 'ADMIN' : 'EMPLOYEE',
+        avatar: employee.profile_picture || employee.avatar || '',
+        position: employee.position || '',
+        department: employee.department || '',
+        firstLogin: !!employee.first_login,
+        companyId: employee.company_id,
       };
     }
+  } catch (err) {
+    console.error('getCurrentUser DB error:', err);
   }
 
-  // 2. Check JWT session
-  const jwtSession = await getSession();
-  if (jwtSession) {
-    const employee = getEmployee(jwtSession.employeeId);
-    if (employee) {
-      return {
-        employeeId: employee.id,
-        name: employee.name,
-        email: employee.email,
-        role: employee.role,
-        avatar: employee.avatar,
-      };
-    }
-    return {
-      employeeId: jwtSession.employeeId,
-      name: jwtSession.name,
-      email: jwtSession.email,
-      role: jwtSession.role.toUpperCase() === 'ADMIN' ? 'ADMIN' : 'EMPLOYEE',
-      avatar: '',
-    };
-  }
-
-  return null;
+  // Fallback to JWT data if DB fails
+  return {
+    employeeId: session.employeeId,
+    name: session.name,
+    email: session.email,
+    role: session.role.toUpperCase() === 'ADMIN' ? 'ADMIN' : 'EMPLOYEE',
+    avatar: '',
+    position: '',
+    department: '',
+    firstLogin: false,
+    companyId: session.companyId,
+  };
 }
 
 /**
- * Require authentication. Redirects to login/signin if no session.
+ * Require authentication. Redirects to signin if no session.
  */
 export async function requireAuth(): Promise<AuthUser> {
   const user = await getCurrentUser();
   if (!user) {
-    redirect('/login');
+    redirect('/signin');
   }
   return user;
 }
 
-export async function setSession(employeeId: string): Promise<void> {
-  const cookieStore = await cookies();
-  cookieStore.set(SESSION_COOKIE, employeeId, {
-    httpOnly: true,
-    path: '/',
-    maxAge: 60 * 60 * 24 * 7,
-    sameSite: 'lax',
-  });
-}
-
 export async function clearSession(): Promise<void> {
   const cookieStore = await cookies();
-  cookieStore.delete(SESSION_COOKIE);
   cookieStore.delete(COOKIE_NAME);
 }

@@ -9,10 +9,11 @@ export async function POST(request: NextRequest) {
     await initDatabase();
 
     const body = await request.json();
-    const { companyName, name, email, phone, password, confirmPassword } = body;
+    const { name, email, phone, password, confirmPassword } = body;
+    const companyName = 'Odoo';
 
     // Validation
-    if (!companyName || !name || !email || !password || !confirmPassword) {
+    if (!name || !email || !password || !confirmPassword) {
       return NextResponse.json(
         { error: 'All fields are required' },
         { status: 400 }
@@ -46,8 +47,8 @@ export async function POST(request: NextRequest) {
 
     // Create admin employee
     const employeeResult = await execute(
-      'INSERT INTO employees (employee_id, company_id, name, email, phone, password_hash, role) VALUES (?, ?, ?, ?, ?, ?, ?)',
-      [employeeId, companyId, name, email, phone || null, passwordHash, 'admin']
+      'INSERT INTO employees (employee_id, company_id, name, email, phone, password_hash, role, first_login) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
+      [employeeId, companyId, name, email, phone || null, passwordHash, 'admin', false]
     );
 
     // Generate JWT

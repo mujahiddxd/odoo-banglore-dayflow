@@ -14,7 +14,11 @@ export function ProfileHeader({ employee }: { employee: Employee }) {
 
       <div className="flex flex-col md:flex-row gap-6 md:gap-8 items-start">
         {/* Avatar */}
-        <div className="profile-avatar shrink-0">{initials}</div>
+        {employee.avatar ? (
+          <img src={employee.avatar} alt={employee.name} className="profile-avatar shrink-0 object-cover" />
+        ) : (
+          <div className="profile-avatar shrink-0">{initials}</div>
+        )}
 
         {/* Main info */}
         <div className="flex-1 min-w-0">

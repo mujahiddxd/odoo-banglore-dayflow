@@ -31,7 +31,7 @@ export function Sidebar({ user }: { user: AuthUser }) {
       <div className="p-5 border-b-2" style={{ borderColor: "var(--uxsg-ink)" }}>
         <Link href="/dashboard" className="block">
           <h1 className="font-headline text-2xl font-bold tracking-tight">
-            Dayflow
+            Odoo
           </h1>
           <p className="font-body text-xs opacity-50 mt-1">HR Management</p>
         </Link>

@@ -10,7 +10,6 @@ import Link from 'next/link';
 export default function SignUpPage() {
   const router = useRouter();
   const [formData, setFormData] = useState({
-    companyName: '',
     name: '',
     email: '',
     phone: '',
@@ -89,7 +88,7 @@ export default function SignUpPage() {
             <div className="text-center mb-7">
               <div className="inline-block sketchy-border px-6 py-2.5 bg-[var(--uxsg-paper)]">
                 <span className="font-headline text-xl font-bold text-[var(--uxsg-ink)]">
-                  DayFlow
+                  Odoo
                 </span>
               </div>
             </div>
@@ -105,28 +104,7 @@ export default function SignUpPage() {
 
             {/* Form */}
             <form onSubmit={handleSubmit} className="space-y-4">
-              <div className="flex items-end gap-3">
-                <div className="flex-1">
-                  <SketchyInput
-                    label="Company Name"
-                    placeholder="Odoo India"
-                    value={formData.companyName}
-                    onChange={handleChange('companyName')}
-                    required
-                  />
-                </div>
-                <button
-                  type="button"
-                  className="mb-0.5 w-10 h-10 sketchy-border flex items-center justify-center bg-[var(--uxsg-teal)] hover:bg-[#4eb5c9] transition-colors cursor-pointer"
-                  title="Upload Logo (coming soon)"
-                >
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round">
-                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-                    <polyline points="17 8 12 3 7 8" />
-                    <line x1="12" y1="3" x2="12" y2="15" />
-                  </svg>
-                </button>
-              </div>
+
 
               <SketchyInput
                 label="Name"
