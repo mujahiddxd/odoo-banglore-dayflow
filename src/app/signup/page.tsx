@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import SketchyButton from '@/components/SketchyButton';
 import SketchyInput from '@/components/SketchyInput';
+import FloatingBackground from '@/components/FloatingBackground';
 
 export default function SignUpPage() {
   const router = useRouter();
@@ -75,16 +76,10 @@ export default function SignUpPage() {
   };
 
   return (
-    <div className="min-h-screen paper-bg flex items-center justify-center p-4">
-      {/* Decorative doodles */}
-      <svg className="doodle-arrow" style={{ top: '10%', left: '5%', opacity: 0.12 }} width="90" height="90" viewBox="0 0 100 100">
-        <circle cx="50" cy="50" r="40" fill="none" stroke="var(--uxsg-yellow)" strokeWidth="2" strokeDasharray="6,4" />
-      </svg>
-      <svg className="doodle-arrow" style={{ bottom: '15%', right: '8%', opacity: 0.12 }} width="70" height="70" viewBox="0 0 100 100">
-        <path d="M20,80 L80,20 M80,20 L60,25 M80,20 L75,40" fill="none" stroke="var(--uxsg-teal)" strokeWidth="2.5" strokeLinecap="round" />
-      </svg>
+    <div className="min-h-screen paper-bg flex items-center justify-center p-4 relative overflow-hidden">
+      <FloatingBackground />
 
-      <div className="w-full max-w-md animate-slide-up">
+      <div className="w-full max-w-md animate-slide-up relative z-10">
         <div className="sketchy-card p-8 relative">
           {/* Tape corners */}
           <div className="tape-corner tape-corner-tl" />

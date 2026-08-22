@@ -5,6 +5,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import SketchyButton from '@/components/SketchyButton';
 import SketchyInput from '@/components/SketchyInput';
 import Link from 'next/link';
+import FloatingBackground from '@/components/FloatingBackground';
 
 function SignInForm() {
   const router = useRouter();
@@ -47,16 +48,10 @@ function SignInForm() {
   };
 
   return (
-    <div className="min-h-screen paper-bg flex items-center justify-center p-4">
-      {/* Decorative doodles */}
-      <svg className="doodle-arrow" style={{ top: '15%', left: '8%', opacity: 0.15 }} width="80" height="80" viewBox="0 0 100 100">
-        <path d="M10,50 Q50,10 90,50 Q50,90 10,50" fill="none" stroke="var(--uxsg-yellow)" strokeWidth="2" strokeDasharray="4,4" />
-      </svg>
-      <svg className="doodle-arrow" style={{ bottom: '20%', right: '10%', opacity: 0.15 }} width="60" height="60" viewBox="0 0 100 100">
-        <path d="M20,80 L80,20 M80,20 L60,25 M80,20 L75,40" fill="none" stroke="var(--uxsg-teal)" strokeWidth="2.5" strokeLinecap="round" />
-      </svg>
+    <div className="min-h-screen paper-bg flex items-center justify-center p-4 relative overflow-hidden">
+      <FloatingBackground />
 
-      <div className="w-full max-w-md animate-slide-up">
+      <div className="w-full max-w-md animate-slide-up relative z-10">
         {/* Card */}
         <div className="sketchy-card p-8 relative">
           {/* Tape corners */}
