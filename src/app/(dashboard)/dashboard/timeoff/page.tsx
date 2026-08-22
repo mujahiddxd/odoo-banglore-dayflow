@@ -4,6 +4,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import TimeOffBalanceCards from '@/components/timeoff/TimeOffBalanceCards';
 import TimeOffRequestsTable from '@/components/timeoff/TimeOffRequestsTable';
 import CreateTimeOffModal from '@/components/timeoff/CreateTimeOffModal';
+import Navbar from '@/components/Navbar';
 import type { TimeOffAllocation, TimeOffRequest } from '@/lib/types';
 
 export default function TimeOffPage() {
@@ -107,70 +108,74 @@ export default function TimeOffPage() {
   const isAdmin = user?.role === 'ADMIN';
 
   return (
-    <>
-      {/* Page Header */}
-      <div className="flex items-center justify-between mb-6 animate-fade-in">
-        <div>
-          <h1 className="font-headline text-3xl font-bold text-[var(--uxsg-ink)]">
-            🏖️ Time Off
-          </h1>
-          <p className="font-body text-sm text-gray-500 mt-1">
-            {isAdmin ? 'Manage employee leave requests' : 'Request and track your time off'}
-          </p>
-        </div>
-        <button
-          onClick={() => setShowCreate(true)}
-          className="sketchy-btn sketchy-btn-primary"
-        >
-          + New Request
-        </button>
-      </div>
-
-      {/* Balance Cards */}
-      <TimeOffBalanceCards allocations={allocations} loading={loading} />
-
-      {/* Filters for Admin */}
-      {isAdmin && (
-        <div className="sketchy-card p-4 mb-4 animate-fade-in">
-          <div className="flex flex-wrap gap-3 items-center">
-            <label className="font-body text-sm font-medium">Filter by status:</label>
-            <select
-              value={filterStatus}
-              onChange={(e) => setFilterStatus(e.target.value)}
-              className="sketchy-input max-w-xs"
-            >
-              <option value="">All</option>
-              <option value="PENDING">Pending</option>
-              <option value="APPROVED">Approved</option>
-              <option value="REJECTED">Rejected</option>
-              <option value="CANCELLED">Cancelled</option>
-            </select>
+    <div className="min-h-screen bg-[var(--uxsg-paper)]">
+      <Navbar userName={user?.name || 'User'} companyName="Odoo" />
+      
+      <div className="max-w-7xl mx-auto px-4 py-6">
+        {/* Page Header */}
+        <div className="flex items-center justify-between mb-6 animate-fade-in">
+          <div>
+            <h1 className="font-headline text-3xl font-bold text-[var(--uxsg-ink)]">
+              🏖️ Time Off
+            </h1>
+            <p className="font-body text-sm text-gray-500 mt-1">
+              {isAdmin ? 'Manage employee leave requests' : 'Request and track your time off'}
+            </p>
           </div>
+          <button
+            onClick={() => setShowCreate(true)}
+            className="sketchy-btn sketchy-btn-primary"
+          >
+            + New Request
+          </button>
         </div>
-      )}
 
-      {/* Requests Section */}
-      <div className="animate-fade-in">
-        <h2 className="font-headline text-xl font-bold mb-3">
-          {isAdmin ? 'All Requests' : 'My Requests'}
-        </h2>
-        <TimeOffRequestsTable
-          requests={requests}
-          loading={loading}
-          showEmployee={isAdmin}
-          isAdmin={isAdmin}
-          onApprove={handleApprove}
-          onReject={handleReject}
-          onCancel={handleCancel}
+        {/* Balance Cards */}
+        <TimeOffBalanceCards allocations={allocations} loading={loading} />
+
+        {/* Filters for Admin */}
+        {isAdmin && (
+          <div className="sketchy-card p-4 mb-4 animate-fade-in">
+            <div className="flex flex-wrap gap-3 items-center">
+              <label className="font-body text-sm font-medium">Filter by status:</label>
+              <select
+                value={filterStatus}
+                onChange={(e) => setFilterStatus(e.target.value)}
+                className="sketchy-input max-w-xs"
+              >
+                <option value="">All</option>
+                <option value="PENDING">Pending</option>
+                <option value="APPROVED">Approved</option>
+                <option value="REJECTED">Rejected</option>
+                <option value="CANCELLED">Cancelled</option>
+              </select>
+            </div>
+          </div>
+        )}
+
+        {/* Requests Section */}
+        <div className="animate-fade-in">
+          <h2 className="font-headline text-xl font-bold mb-3">
+            {isAdmin ? 'All Requests' : 'My Requests'}
+          </h2>
+          <TimeOffRequestsTable
+            requests={requests}
+            loading={loading}
+            showEmployee={isAdmin}
+            isAdmin={isAdmin}
+            onApprove={handleApprove}
+            onReject={handleReject}
+            onCancel={handleCancel}
+          />
+        </div>
+
+        {/* Create Modal */}
+        <CreateTimeOffModal
+          isOpen={showCreate}
+          onClose={() => setShowCreate(false)}
+          onCreated={() => fetchData()}
         />
       </div>
-
-      {/* Create Modal */}
-      <CreateTimeOffModal
-        isOpen={showCreate}
-        onClose={() => setShowCreate(false)}
-        onCreated={() => fetchData()}
-      />
-    </>
+    </div>
   );
 }
