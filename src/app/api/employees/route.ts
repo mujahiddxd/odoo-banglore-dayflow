@@ -7,6 +7,9 @@ import { sendWelcomeEmail } from '@/lib/email';
 
 import { canViewEmployees } from '@/lib/permissions';
 
+import { getAttendanceStatus } from '@/lib/data/attendance';
+import { getApprovedLeaveDatesForMonth } from '@/lib/data/timeoff';
+
 // GET — List all employees (Admin/HR only)
 export async function GET() {
   try {
@@ -18,36 +21,28 @@ export async function GET() {
     const isAdmin = canViewEmployees(user);
 
     await initDatabase();
-    const today = new Date().toISOString().split('T')[0];
+    
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = now.getMonth() + 1;
+    const todayStr = now.toISOString().split('T')[0];
 
     const employees = await query<any>(
       "SELECT id, employee_id, name, email, phone, role, avatar, profile_picture, position, department, created_at FROM employees WHERE role != 'admin' ORDER BY created_at DESC"
     );
 
-    // Get today's attendance for each employee
-    const attendance = await query<{
-      employee_id: number;
-      check_in: string;
-      check_out: string;
-    }>(
-      `SELECT a.employee_id, a.check_in, a.check_out 
-       FROM attendance a 
-       JOIN employees e ON a.employee_id = e.id 
-       WHERE a.date = ?`,
-      [today]
-    );
-
-    const attendanceMap = new Map(
-      attendance.map((a) => [a.employee_id, a])
-    );
-
     const employeesWithStatus = employees.map((emp) => {
-      const att = attendanceMap.get(emp.id);
+      const att = getAttendanceStatus(emp.employee_id);
+      
       let status: 'present' | 'leave' | 'absent' = 'absent';
-      if (att?.check_in && !att?.check_out) {
+      
+      if (att.status === 'CHECKED_IN' || att.status === 'CHECKED_OUT') {
         status = 'present';
-      } else if (att?.check_in && att?.check_out) {
-        status = 'present';
+      } else {
+        const leaveDates = getApprovedLeaveDatesForMonth(emp.employee_id, year, month);
+        if (leaveDates.some(l => l.date === todayStr)) {
+          status = 'leave';
+        }
       }
       
       const avatar = emp.profile_picture || emp.avatar || '';
