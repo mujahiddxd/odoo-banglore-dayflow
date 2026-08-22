@@ -42,7 +42,7 @@ export default function AttendancePage() {
     if (user) fetchData();
   }, [year, month, user]);
 
-  const fetchUser = async () => {
+  async function fetchUser() {
     try {
       const res = await fetch('/api/auth/me');
       if (res.ok) {

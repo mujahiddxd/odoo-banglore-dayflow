@@ -24,7 +24,7 @@ export default function CheckInOut() {
     return () => clearInterval(interval);
   }, [status, checkInTime]);
 
-  const fetchStatus = async () => {
+  async function fetchStatus() {
     try {
       const res = await fetch('/api/attendance/status');
       if (res.ok) {

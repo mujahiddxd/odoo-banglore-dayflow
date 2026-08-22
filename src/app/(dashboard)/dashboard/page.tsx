@@ -41,7 +41,7 @@ export default function DashboardPage() {
     fetchData();
   }, []);
 
-  const fetchData = async () => {
+  async function fetchData() {
     try {
       const [userRes, empRes] = await Promise.all([
         fetch('/api/auth/me'),

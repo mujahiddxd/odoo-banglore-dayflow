@@ -91,7 +91,7 @@ export default function ProfilePage() {
     'me': { id: '1', name: 'Priya Sharma', email: 'priya.sharma@dayflow.in', phone: '+91 98765 43210', role: 'admin', avatar: '', created_at: '2024-01-15T09:00:00Z', companyName: 'Odoo' },
   };
 
-  const fetchData = async () => {
+  async function fetchData() {
     try {
       const userRes = await fetch('/api/auth/me').catch(() => null);
       if (userRes && userRes.ok) {

@@ -1,47 +1,36 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Odoo DayFlow HRMS
+
+DayFlow is a comprehensive Human Resource Management System (HRMS) built specifically for single-tenant enterprise use by **Odoo**. Developed with Next.js 16 (App Router), Tailwind CSS v4, and MySQL, the platform provides a unified "Sketchy" themed interface for core HR functions including employee onboarding, attendance tracking, and payroll management.
+
+## Features
+
+- **Hybrid Authentication Strategy**: Seamlessly integrates a robust JWT & MySQL authentication layer with an in-memory fallback for instant, database-free UI/UX testing and demonstrations.
+- **Strict Role-Based Access Control (RBAC)**: Enforces administrative provisioning. Employees cannot self-register, and new accounts are generated with deterministic IDs (e.g., `OIJODO20260001`).
+- **Automated Employee Onboarding**: New users undergo a mandatory Profile Setup to update system-generated passwords and upload resumes for AI-driven skill extraction.
+- **Advanced Attendance & Time-Off Management**: Real-time Check In/Out with network-based enforcement, coupled with an allocative leave request system (Sick, Casual, Earned).
+- **Comprehensive Payroll Engine**: Calculates Payable Days by cross-referencing attendance logs, approved leaves, and specific 5-day/6-day work schedules. Uses decimal-safe arithmetic (Paise) for absolute financial accuracy.
+
+## Architecture
+
+The system utilizes a hybrid architecture that merges two parallel development workstreams into a cohesive product. 
+- **Database**: Relies on a MySQL / MariaDB instance.
+- **Routing**: Next.js App Router with secure API routes and fallback mock stores.
+- **Styling**: Tailwind CSS v4 with a unique creative "Sketchy" aesthetic.
+
+For more detailed technical documentation, please refer to:
+- [Context & History](context.md)
+- [Architecture](architecture.md)
+- [Design Documentation](design.md)
 
 ## Getting Started
 
-First, run the development server:
+### Prerequisites
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+Ensure you have a local MySQL server running (e.g., via XAMPP or Docker).
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Database Setup
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
-
-## Database Setup & Credentials
-
-This project connects to a local MySQL / MariaDB instance.
-
-### Prerequisites & Setup
-1. **MySQL Server**: Ensure your local MySQL server is running (e.g., via XAMPP MySQL).
-2. **Environment Variables**: Create a `.env` file in the root directory:
+1. Create a `.env` file in the root directory:
    ```env
    DB_HOST=localhost
    DB_PORT=3306
@@ -49,14 +38,19 @@ This project connects to a local MySQL / MariaDB instance.
    DB_PASSWORD=
    DB_NAME=dayflow
    ```
-3. **Database Creation**: Ensure the `dayflow` database is created:
-   ```sql
-   CREATE DATABASE IF NOT EXISTS dayflow;
-   ```
-4. **Table Initialization**: The application will automatically create the required database tables and seed the default admin account on start.
 
-### Seeded Credentials
-Use these credentials to sign in on the `/signin` page:
+2. The application will automatically create the required database tables and seed the default admin account on startup.
+
+### Installation
+
+```bash
+npm install
+npm run dev
+```
+
+### Credentials
+
+Once the development server is running on [http://localhost:3000](http://localhost:3000), you can sign in with the seeded Admin credentials:
+
 - **Email**: `admin@dayflow.in`
 - **Password**: `admin123`
-

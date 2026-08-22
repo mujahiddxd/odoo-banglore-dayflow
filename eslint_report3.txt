@@ -1,0 +1,374 @@
+
+/home/zee/Desktop/odoo-banglore-dayflow/fix_eslint.js
+  1:12  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+  2:14  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+
+/home/zee/Desktop/odoo-banglore-dayflow/fix_eslint2.js
+  1:12  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+
+/home/zee/Desktop/odoo-banglore-dayflow/src/app/(dashboard)/dashboard/attendance/page.tsx
+  38:5   error    Error: Cannot access variable before it is declared
+
+`fetchUser` is accessed before it is declared, which prevents the earlier access from updating when this value changes over time.
+
+/home/zee/Desktop/odoo-banglore-dayflow/src/app/(dashboard)/dashboard/attendance/page.tsx:38:5
+  36 |
+  37 |   useEffect(() => {
+> 38 |     fetchUser();
+     |     ^^^^^^^^^ `fetchUser` accessed before it is declared
+  39 |   }, []);
+  40 |
+  41 |   useEffect(() => {
+
+/home/zee/Desktop/odoo-banglore-dayflow/src/app/(dashboard)/dashboard/attendance/page.tsx:45:3
+  43 |   }, [year, month, user]);
+  44 |
+> 45 |   async function fetchUser() {
+     |   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 46 |     try {
+     | ^^^^^^^^^
+> 47 |       const res = await fetch('/api/auth/me');
+     …
+     | ^^^^^^^^^
+> 61 |     }
+     | ^^^^^^^^^
+> 62 |   };
+     | ^^^^ `fetchUser` is declared here
+  63 |
+  64 |   const fetchData = useCallback(async () => {
+  65 |     setLoading(true);                                                                                                                                                                    react-hooks/immutability
+  42:15  error    Error: Cannot access variable before it is declared
+
+`fetchData` is accessed before it is declared, which prevents the earlier access from updating when this value changes over time.
+
+/home/zee/Desktop/odoo-banglore-dayflow/src/app/(dashboard)/dashboard/attendance/page.tsx:42:15
+  40 |
+  41 |   useEffect(() => {
+> 42 |     if (user) fetchData();
+     |               ^^^^^^^^^ `fetchData` accessed before it is declared
+  43 |   }, [year, month, user]);
+  44 |
+  45 |   async function fetchUser() {
+
+/home/zee/Desktop/odoo-banglore-dayflow/src/app/(dashboard)/dashboard/attendance/page.tsx:64:3
+   62 |   };
+   63 |
+>  64 |   const fetchData = useCallback(async () => {
+      |   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>  65 |     setLoading(true);
+      | ^^^^^^^^^^^^^^^^^^^^^
+>  66 |     try {
+      …
+      | ^^^^^^^^^^^^^^^^^^^^^
+>  97 |     }
+      | ^^^^^^^^^^^^^^^^^^^^^
+>  98 |   }, [year, month, user, filterEmployee]);
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ `fetchData` is declared here
+   99 |
+  100 |   const handleNavigate = (y: number, m: number) => {
+  101 |     setYear(y);  react-hooks/immutability
+  43:6   warning  React Hook useEffect has a missing dependency: 'fetchData'. Either include it or remove the dependency array                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            react-hooks/exhaustive-deps
+
+/home/zee/Desktop/odoo-banglore-dayflow/src/app/(dashboard)/dashboard/page.tsx
+   9:8  warning  'SketchyInput' is defined but never used                                                                      @typescript-eslint/no-unused-vars
+  42:6  warning  React Hook useEffect has a missing dependency: 'fetchData'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+/home/zee/Desktop/odoo-banglore-dayflow/src/app/(dashboard)/dashboard/payslips/page.tsx
+  21:5  error  Error: Cannot access variable before it is declared
+
+`fetchData` is accessed before it is declared, which prevents the earlier access from updating when this value changes over time.
+
+/home/zee/Desktop/odoo-banglore-dayflow/src/app/(dashboard)/dashboard/payslips/page.tsx:21:5
+  19 |
+  20 |   useEffect(() => {
+> 21 |     fetchData();
+     |     ^^^^^^^^^ `fetchData` accessed before it is declared
+  22 |   }, []);
+  23 |
+  24 |   async function fetchData() {
+
+/home/zee/Desktop/odoo-banglore-dayflow/src/app/(dashboard)/dashboard/payslips/page.tsx:24:3
+  22 |   }, []);
+  23 |
+> 24 |   async function fetchData() {
+     |   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 25 |     try {
+     | ^^^^^^^^^
+> 26 |       const userRes = await fetch('/api/auth/me');
+     …
+     | ^^^^^^^^^
+> 56 |     }
+     | ^^^^^^^^^
+> 57 |   };
+     | ^^^^ `fetchData` is declared here
+  58 |
+  59 |   const monthNames = ["January", "February", "March", "April", "May", "June",
+  60 |     "July", "August", "September", "October", "November", "December"];  react-hooks/immutability
+
+/home/zee/Desktop/odoo-banglore-dayflow/src/app/(dashboard)/dashboard/reports/page.tsx
+  26:5  error  Error: Cannot access variable before it is declared
+
+`fetchData` is accessed before it is declared, which prevents the earlier access from updating when this value changes over time.
+
+/home/zee/Desktop/odoo-banglore-dayflow/src/app/(dashboard)/dashboard/reports/page.tsx:26:5
+  24 |
+  25 |   useEffect(() => {
+> 26 |     fetchData();
+     |     ^^^^^^^^^ `fetchData` accessed before it is declared
+  27 |   }, []);
+  28 |
+  29 |   async function fetchData() {
+
+/home/zee/Desktop/odoo-banglore-dayflow/src/app/(dashboard)/dashboard/reports/page.tsx:29:3
+  27 |   }, []);
+  28 |
+> 29 |   async function fetchData() {
+     |   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 30 |     try {
+     | ^^^^^^^^^
+> 31 |       const [userRes, reportsRes] = await Promise.all([
+     …
+     | ^^^^^^^^^
+> 52 |     }
+     | ^^^^^^^^^
+> 53 |   };
+     | ^^^^ `fetchData` is declared here
+  54 |
+  55 |   const COLORS = ['#6d28d9', '#10b981', '#f59e0b', '#ef4444'];
+  56 |  react-hooks/immutability
+
+/home/zee/Desktop/odoo-banglore-dayflow/src/app/(dashboard)/dashboard/timeoff/page.tsx
+  21:5   error    Error: Cannot access variable before it is declared
+
+`fetchUser` is accessed before it is declared, which prevents the earlier access from updating when this value changes over time.
+
+/home/zee/Desktop/odoo-banglore-dayflow/src/app/(dashboard)/dashboard/timeoff/page.tsx:21:5
+  19 |
+  20 |   useEffect(() => {
+> 21 |     fetchUser();
+     |     ^^^^^^^^^ `fetchUser` accessed before it is declared
+  22 |   }, []);
+  23 |
+  24 |   useEffect(() => {
+
+/home/zee/Desktop/odoo-banglore-dayflow/src/app/(dashboard)/dashboard/timeoff/page.tsx:28:3
+  26 |   }, [user, filterStatus]);
+  27 |
+> 28 |   async function fetchUser() {
+     |   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 29 |     try {
+     | ^^^^^^^^^
+> 30 |       const res = await fetch('/api/auth/me');
+     …
+     | ^^^^^^^^^
+> 42 |     }
+     | ^^^^^^^^^
+> 43 |   };
+     | ^^^^ `fetchUser` is declared here
+  44 |
+  45 |   const fetchData = useCallback(async () => {
+  46 |     setLoading(true);                                                                                                                  react-hooks/immutability
+  25:15  error    Error: Cannot access variable before it is declared
+
+`fetchData` is accessed before it is declared, which prevents the earlier access from updating when this value changes over time.
+
+/home/zee/Desktop/odoo-banglore-dayflow/src/app/(dashboard)/dashboard/timeoff/page.tsx:25:15
+  23 |
+  24 |   useEffect(() => {
+> 25 |     if (user) fetchData();
+     |               ^^^^^^^^^ `fetchData` accessed before it is declared
+  26 |   }, [user, filterStatus]);
+  27 |
+  28 |   async function fetchUser() {
+
+/home/zee/Desktop/odoo-banglore-dayflow/src/app/(dashboard)/dashboard/timeoff/page.tsx:45:3
+  43 |   };
+  44 |
+> 45 |   const fetchData = useCallback(async () => {
+     |   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 46 |     setLoading(true);
+     | ^^^^^^^^^^^^^^^^^^^^^
+> 47 |     try {
+     …
+     | ^^^^^^^^^^^^^^^^^^^^^
+> 66 |     }
+     | ^^^^^^^^^^^^^^^^^^^^^
+> 67 |   }, [user, filterStatus]);
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^ `fetchData` is declared here
+  68 |
+  69 |   const handleApprove = async (requestId: string) => {
+  70 |     try {  react-hooks/immutability
+  26:6   warning  React Hook useEffect has a missing dependency: 'fetchData'. Either include it or remove the dependency array                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     react-hooks/exhaustive-deps
+  67:6   warning  React Hook useCallback has an unnecessary dependency: 'user'. Either exclude it or remove the dependency array                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   react-hooks/exhaustive-deps
+
+/home/zee/Desktop/odoo-banglore-dayflow/src/app/api/attendance/route.ts
+  8:26  warning  'getStatus' is defined but never used  @typescript-eslint/no-unused-vars
+
+/home/zee/Desktop/odoo-banglore-dayflow/src/app/api/auth/signup/route.ts
+  59:11  warning  'empResult' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+/home/zee/Desktop/odoo-banglore-dayflow/src/app/api/employees/[employeeId]/avatar/route.ts
+  3:19  warning  'queryOne' is defined but never used  @typescript-eslint/no-unused-vars
+
+/home/zee/Desktop/odoo-banglore-dayflow/src/app/api/notifications/route.ts
+  16:9  warning  'params' is never reassigned. Use 'const' instead  prefer-const
+
+/home/zee/Desktop/odoo-banglore-dayflow/src/app/api/reports/route.ts
+  7:27  warning  'request' is defined but never used  @typescript-eslint/no-unused-vars
+
+/home/zee/Desktop/odoo-banglore-dayflow/src/app/api/timeoff/route.ts
+  9:3  warning  'getAllTimeOffTypes' is defined but never used  @typescript-eslint/no-unused-vars
+
+/home/zee/Desktop/odoo-banglore-dayflow/src/app/profile/[id]/page.tsx
+  23:9  warning  'router' is assigned a value but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      @typescript-eslint/no-unused-vars
+  85:5  error    Error: Cannot access variable before it is declared
+
+`fetchData` is accessed before it is declared, which prevents the earlier access from updating when this value changes over time.
+
+/home/zee/Desktop/odoo-banglore-dayflow/src/app/profile/[id]/page.tsx:85:5
+  83 |
+  84 |   useEffect(() => {
+> 85 |     fetchData();
+     |     ^^^^^^^^^ `fetchData` accessed before it is declared
+  86 |   }, [id]);
+  87 |
+  88 |   const MOCK_PROFILES: Record<string, EmployeeData> = {
+
+/home/zee/Desktop/odoo-banglore-dayflow/src/app/profile/[id]/page.tsx:94:3
+   92 |   };
+   93 |
+>  94 |   async function fetchData() {
+      |   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>  95 |     try {
+      | ^^^^^^^^^
+>  96 |       const userRes = await fetch('/api/auth/me').catch(() => null);
+      …
+      | ^^^^^^^^^
+> 123 |     }
+      | ^^^^^^^^^
+> 124 |   };
+      | ^^^^ `fetchData` is declared here
+  125 |
+  126 |   const handleSaveProfile = async () => {
+  127 |     setIsSaving(true);  react-hooks/immutability
+  86:6  warning  React Hook useEffect has a missing dependency: 'fetchData'. Either include it or remove the dependency array                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     react-hooks/exhaustive-deps
+
+/home/zee/Desktop/odoo-banglore-dayflow/src/components/CheckInOut.tsx
+   3:38  warning  'useCallback' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     @typescript-eslint/no-unused-vars
+  13:5   error    Error: Cannot access variable before it is declared
+
+`fetchStatus` is accessed before it is declared, which prevents the earlier access from updating when this value changes over time.
+
+/home/zee/Desktop/odoo-banglore-dayflow/src/components/CheckInOut.tsx:13:5
+  11 |   // Fetch current attendance status on mount
+  12 |   useEffect(() => {
+> 13 |     fetchStatus();
+     |     ^^^^^^^^^^^ `fetchStatus` accessed before it is declared
+  14 |   }, []);
+  15 |
+  16 |   // Timer effect
+
+/home/zee/Desktop/odoo-banglore-dayflow/src/components/CheckInOut.tsx:27:3
+  25 |   }, [status, checkInTime]);
+  26 |
+> 27 |   async function fetchStatus() {
+     |   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 28 |     try {
+     | ^^^^^^^^^
+> 29 |       const res = await fetch('/api/attendance/status');
+     …
+     | ^^^^^^^^^
+> 41 |     }
+     | ^^^^^^^^^
+> 42 |   };
+     | ^^^^ `fetchStatus` is declared here
+  43 |
+  44 |   const handleCheckIn = async () => {
+  45 |     setLoading(true);  react-hooks/immutability
+  39:14  warning  'e' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               @typescript-eslint/no-unused-vars
+
+/home/zee/Desktop/odoo-banglore-dayflow/src/components/EmployeeCard.tsx
+  17:9  warning  'statusClass' is assigned a value but never used  @typescript-eslint/no-unused-vars
+  29:9  warning  'initials' is assigned a value but never used     @typescript-eslint/no-unused-vars
+
+/home/zee/Desktop/odoo-banglore-dayflow/src/components/Navbar.tsx
+  3:27  warning  'useRef' is defined but never used     @typescript-eslint/no-unused-vars
+  3:35  warning  'useEffect' is defined but never used  @typescript-eslint/no-unused-vars
+
+/home/zee/Desktop/odoo-banglore-dayflow/src/components/NotificationBell.tsx
+  36:5  warning  Unused eslint-disable directive (no problems were reported from 'react-hooks/set-state-in-effect')
+
+/home/zee/Desktop/odoo-banglore-dayflow/src/components/attendance/CheckInCard.tsx
+  13:5  error  Error: Cannot access variable before it is declared
+
+`fetchStatus` is accessed before it is declared, which prevents the earlier access from updating when this value changes over time.
+
+/home/zee/Desktop/odoo-banglore-dayflow/src/components/attendance/CheckInCard.tsx:13:5
+  11 |
+  12 |   useEffect(() => {
+> 13 |     fetchStatus();
+     |     ^^^^^^^^^^^ `fetchStatus` accessed before it is declared
+  14 |   }, []);
+  15 |
+  16 |   useEffect(() => {
+
+/home/zee/Desktop/odoo-banglore-dayflow/src/components/attendance/CheckInCard.tsx:25:3
+  23 |   }, [status, checkInTime]);
+  24 |
+> 25 |   async function fetchStatus() {
+     |   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 26 |     try {
+     | ^^^^^^^^^
+> 27 |       const res = await fetch('/api/attendance/status');
+     …
+     | ^^^^^^^^^
+> 39 |     }
+     | ^^^^^^^^^
+> 40 |   };
+     | ^^^^ `fetchStatus` is declared here
+  41 |
+  42 |   const handleAction = async (action: 'check-in' | 'check-out') => {
+  43 |     setLoading(true);  react-hooks/immutability
+
+/home/zee/Desktop/odoo-banglore-dayflow/src/components/profile/tabs/SalaryInfoTab.tsx
+  685:5  warning  Unused eslint-disable directive (no problems were reported from 'react-hooks/set-state-in-effect')
+
+/home/zee/Desktop/odoo-banglore-dayflow/src/components/timeoff/CreateTimeOffModal.tsx
+  24:7  error    Error: Cannot access variable before it is declared
+
+`fetchTypes` is accessed before it is declared, which prevents the earlier access from updating when this value changes over time.
+
+/home/zee/Desktop/odoo-banglore-dayflow/src/components/timeoff/CreateTimeOffModal.tsx:24:7
+  22 |   useEffect(() => {
+  23 |     if (isOpen) {
+> 24 |       fetchTypes();
+     |       ^^^^^^^^^^ `fetchTypes` accessed before it is declared
+  25 |       // Reset form
+  26 |       // eslint-disable-next-line react-hooks/set-state-in-effect
+  27 |       setTypeId('');
+
+/home/zee/Desktop/odoo-banglore-dayflow/src/components/timeoff/CreateTimeOffModal.tsx:58:3
+  56 |   }, [startDate, endDate]);
+  57 |
+> 58 |   async function fetchTypes() {
+     |   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 59 |     try {
+     | ^^^^^^^^^
+> 60 |       const res = await fetch('/api/timeoff/types');
+     …
+     | ^^^^^^^^^
+> 68 |     }
+     | ^^^^^^^^^
+> 69 |   };
+     | ^^^^ `fetchTypes` is declared here
+  70 |
+  71 |   const handleSubmit = async (e: React.FormEvent) => {
+  72 |     e.preventDefault();  react-hooks/immutability
+  26:7  warning  Unused eslint-disable directive (no problems were reported from 'react-hooks/set-state-in-effect')
+
+/home/zee/Desktop/odoo-banglore-dayflow/src/proxy.ts
+  13:9  warning  'isPublicPath' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+✖ 36 problems (13 errors, 23 warnings)
+  0 errors and 4 warnings potentially fixable with the `--fix` option.
+

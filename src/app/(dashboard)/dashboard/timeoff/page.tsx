@@ -25,7 +25,7 @@ export default function TimeOffPage() {
     if (user) fetchData();
   }, [user, filterStatus]);
 
-  const fetchUser = async () => {
+  async function fetchUser() {
     try {
       const res = await fetch('/api/auth/me');
       if (res.ok) {
