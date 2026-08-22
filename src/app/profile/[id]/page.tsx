@@ -101,16 +101,20 @@ export default function ProfilePage() {
 
       const res = await fetch(`/api/employees/${id}`).catch(() => null);
       if (res && res.ok) {
-        const json = await res.json();
-        const emp = json.data?.employee || json.employee;
-        setEmployee(emp);
-        setEditPhone(emp.phone || '');
-        setEditAddress(emp.address || '');
-        return;
+        const resData = await res.json();
+        const emp = resData.data?.employee || resData.employee;
+        if (emp) {
+          setEmployee(emp);
+          setEditPhone(emp.phone || '');
+          setEditAddress(emp.address || '');
+        } else {
+          const fallback = MOCK_PROFILES[id] || MOCK_PROFILES['1'];
+          setEmployee(fallback);
+        }
+      } else {
+        const fallback = MOCK_PROFILES[id] || MOCK_PROFILES['1'];
+        setEmployee(fallback);
       }
-      
-      const fallback = MOCK_PROFILES[id] || MOCK_PROFILES['1'];
-      setEmployee(fallback);
     } catch {
       const fallback = MOCK_PROFILES[id] || MOCK_PROFILES['1'];
       setEmployee(fallback);

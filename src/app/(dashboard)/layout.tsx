@@ -1,5 +1,6 @@
 import { requireAuth } from "@/lib/auth";
 import { Sidebar } from "@/components/dashboard/Sidebar";
+import Chatbot from "@/components/Chatbot";
 
 export default async function DashboardLayout({
   children,
@@ -15,8 +16,9 @@ export default async function DashboardLayout({
         className="flex-1 paper-bg"
         style={{ marginLeft: "var(--sidebar-width)" }}
       >
-        <div className="p-6 md:p-8 max-w-6xl mx-auto">{children}</div>
+        {children}
       </main>
+      <Chatbot />
     </div>
   );
 }
