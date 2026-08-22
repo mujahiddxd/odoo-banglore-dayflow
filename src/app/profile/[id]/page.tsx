@@ -5,15 +5,14 @@ import { useRouter, useParams } from 'next/navigation';
 import Navbar from '@/components/Navbar';
 
 interface EmployeeData {
-  id: number;
-  employee_id: string;
+  id: string;
   name: string;
   email: string;
-  phone: string;
+  mobile?: string;
   role: string;
   avatar: string;
-  created_at: string;
-  companyName: string;
+  created_at?: string;
+  company?: string;
 }
 
 export default function ProfilePage() {
@@ -93,8 +92,8 @@ export default function ProfilePage() {
 
       const res = await fetch(`/api/employees/${id}`).catch(() => null);
       if (res && res.ok) {
-        const data = await res.json();
-        setEmployee(data.employee);
+        const json = await res.json();
+        setEmployee(json.data?.employee || json.employee);
         return;
       }
       
